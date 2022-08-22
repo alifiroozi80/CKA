@@ -91,7 +91,7 @@ information.
   In this repo, for more understanding of the concepts, I used some awesome images and some great examples that belong
   to [TechWorld with Nana](https://www.techworld-with-nana.com).
 
-  Nana is one of the best DevOps mentors out there, Be sure to check
+  Nana is one of my GREATEST teachers and I learned from her lot, also she is one of the best DevOps mentors out there, Be sure to check
   her [youtube channel](https://www.youtube.com/c/TechWorldwithNana) alongside your journey!
 
 * [Bret Fisher](https://www.bretfisher.com)
