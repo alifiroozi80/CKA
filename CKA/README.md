@@ -469,6 +469,18 @@
   <li>
       Pro Tips
       <ul>
+        <li><a href="#Pro-Tips-Exam-Tips">Exam Tips</a>
+          <ul>
+            <li><a href="#Pro-Tips-Exam-Tips-Imperative-kubectl-commands">Imperative kubectl commands</a></li>
+            <li><a href="#Pro-Tips-Exam-Tips-Use-shortcuts">Use shortcuts</a></li>
+            <li><a href="#Pro-Tips-Exam-Tips-Temp-File-when-editing-Deployments">Temp File when editing Deployments</a></li>
+            <li><a href="#Pro-Tips-Exam-Tips-Practice-these-commands">Practice these commands</a></li>
+            <li><a href="#Pro-Tips-Exam-Tips-Working-with-Root-User">Working with Root User</a></li>
+            <li><a href="#Pro-Tips-Exam-Tips-Sessions-and-User">Sessions & Users</a></li>
+            <li><a href="#Pro-Tips-Exam-Tips-Multiple-clusters">Multiple clusters</a></li>
+            <li><a href="#Pro-Tips-Exam-Tips-K8s-official-documentation">K8s official documentation</a></li>
+          </ul>
+        </li>
         <li><a href="#Pro-Tips">Debugging</a>
           <ul>
             <li><a href="#Pro-Tips-Networking">Networking</a>
@@ -485,12 +497,7 @@
           </li>
           </ul>
         </li>
-       <li><a href="#Pro-Tips">Links</a>
-          <ul>
-            <li><a href="#links">Useful Links</a>
-            </li>
-          </ul>
-        </li> 
+        <li><a href="#Pro-Tips-links">Links</a></li> 
       </ul>
   </li>
   </ol>
@@ -6141,9 +6148,118 @@ spec:
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+---
+
 # Pro Tips
 
 <div id="Pro-Tips">
+
+## Exam Tips
+
+<div id="Pro-Tips-Exam-Tips">
+
+### Imperative kubectl commands
+
+<div id="Pro-Tips-Exam-Tips-Imperative-kubectl-commands">
+
+* Quickely create resources using imperative commands
+    * Faster and preparing config files
+* Get used to using `--help` option
+    * Save you a lot of time
+    * Quickly look up instead of using UI
+    * You don't have to memorize any commands
+* Generate **boilerplate manifests**
+    * `kubectl create service clusterip myservice --tcp=80:80 --dry-run=client -o yaml > myservice.yaml`
+
+</div> <!-- Imperative kubectl commands -->
+
+### Use shortcuts
+
+<div id="Pro-Tips-Exam-Tips-Use-shortcuts">
+
+* Kubectl
+    * Create an **alias**
+    * `alias k=kubectl`
+* Dry Run
+    * Save command in **variable**
+    * `export do="--dry-run=client -o yaml"`
+    * `k create svc clusterip myservice --tcp=80:80 $do > myservice.yaml`
+
+</div> <!-- Use shortcuts -->
+
+### Temp File when editing Deployments
+
+<div id="Pro-Tips-Exam-Tips-Temp-File-when-editing-Deployments">
+
+* You can NOT edit all specification of **existing** Pods
+    * You can't add/remove containers
+    * You can't add volumes
+* You need to delete your Deployment and re-apply updated Deployment manifest
+    * `kubectl edit ...`: When exit, you will get an error
+* In the event an error occurs while updating, a **temporary file will be created**
+    * `kubectl apply -f /tmp/file.yaml`
+
+</div> <!-- Temp File when editing Deployments -->
+
+### Practice these commands
+
+<div id="Pro-Tips-Exam-Tips-Practice-these-commands">
+
+* **Scale** Deployments up and down
+    * `kubectl scale --replicas=3 deployment/mysql`
+* **Filter** resources
+    * Display all Nodes, which don't have taints `NoSchedule`
+    * Display all `ready` Nodes
+    * Display all Pods that have Resource Requests set
+    * List all Pods running on `Worker1`
+* Display resource usage Pods or Nodes
+    * `kubectl top <POD_NAME> --containers`
+* Switching default namespace
+    * `kubectl config set-context --current --namespace=some-name-space`
+
+</div> <!-- Practice these commands -->
+
+### Working with Root User
+
+<div id="Pro-Tips-Exam-Tips-Working-with-Root-User">
+
+* You are NOT working with root user. e.g. `sudo apt update`
+* **Switch to the root user**, if you have more to do (`sudo -i`)
+
+</div> <!-- Working with Root User -->
+
+### Sessions & Users
+
+<div id="Pro-Tips-Exam-Tips-Sessions-and-User">
+
+* Be careful of **session switches**
+* **Pay Attention**: which server and which user?
+
+</div> <!-- Sessions & Users -->
+
+### Multiple clusters
+
+<div id="Pro-Tips-Exam-Tips-Multiple-clusters">
+
+* At the **beginning of each question:** Command to switch to right cluster
+* Pay Attention ti the environment you are in
+    * Kubeconfig file?
+    * Cluster context?
+
+</div> <!-- Multiple clusters -->
+
+### K8s official documentation
+
+<div id="Pro-Tips-Exam-Tips-K8s-official-documentation">
+
+During the exam, you only have access to the [Kubernetes Official Documentation](https://kubernetes.io/docs/home/)
+
+* Everything can be found here
+* Learn how to work with the docs
+* Use as the only source
+
+</div> <!-- K8s official documentation -->
+</div> <!-- Exam Tips -->
 
 ## Networking
 
@@ -6173,7 +6289,7 @@ curl http://nginx-service:8080
 
 If you couldn't curl your service via `Service-name:PORT` then you probably have a `DNS Issue`....
 
-</div>
+</div> <!-- Pod Communication -->
 
 ### CoreDNS
 
@@ -6185,8 +6301,7 @@ Service Name Resolution Problems?
 2) Check CoreDNS logs
 3) Check <a href="#DNS-in-kubernetes">this section</a>
 
-</div>
-
+</div> <!-- CoreDNS -->
 </div> <!-- Networking -->
 
 ## Pro Tips for working with Kubectl
@@ -6235,9 +6350,9 @@ But remember :You have to clean up a little bit of this file, e.g. `creationTime
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-# Links & Resources
+## Links & Resources
 
-<div id="links">
+<div id="Pro-Tips-links">
 
 * [4 Most Important Kubernetes Interview Questions](https://www.linkedin.com/pulse/4-most-important-kubernetes-interview-questions-raju-kumar-)
 
