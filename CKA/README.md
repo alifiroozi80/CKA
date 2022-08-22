@@ -570,7 +570,7 @@ So, how do you interact with this cluster?
         * Api Server is **load balanced**
     * Scheduler
         * `Scheduler`: Where to put the Pod?
-        * Scheduler just decides on which Node Node new Pod should be scheduled?
+        * Scheduler just decides on which Node new Pod should be scheduled?
         * `Kubelet` actually starts the Pod
     * Controller Manager
         * `Controller Manager`: Detects cluster state changes
