@@ -6354,6 +6354,7 @@ But remember :You have to clean up a little bit of this file, e.g. `creationTime
 
 <div id="Pro-Tips-links">
 
+* [Open Source Curriculum for CNCF Certification Courses](https://github.com/cncf/curriculum)
 * [4 Most Important Kubernetes Interview Questions](https://www.linkedin.com/pulse/4-most-important-kubernetes-interview-questions-raju-kumar-)
 
 </div>
