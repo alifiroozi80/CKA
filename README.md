@@ -50,7 +50,7 @@ Have Fun!
 - [ ] Add `Operators`
 - [ ] Add monitoring - `Prometheus`
 - [ ] Add `Microservices`
-- [ ] Kubernets on AWS - `ESK`
+- [ ] Kubernets on AWS - `EKS`
 
 See the [open issues](https://github.com/alifiroozi80/CKA/issues) for a full list of proposed features (and known
 issues).
