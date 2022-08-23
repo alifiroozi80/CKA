@@ -1,7 +1,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://github.com/alifiroozi80/CKA/edit/main/CKA">
     <img src="images/logo.png" alt="Logo" width="150" height="150">
   </a>
 
