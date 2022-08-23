@@ -25,7 +25,7 @@ If you want to become a Certified Kubernetes Administrator or you just want to l
 understand everything this repo is a good choice for you.
 
 In this repo, you'll be prepared to pass the exam, and you'll also learn more about Kubernetes concepts that
-that are not relevant to the exam such as `Operators`, `Helm charts`, `Microservices`, `Prometheus`, and most importantly,
+that are not relevant to the exam such as `Kubernetes on AWS (EKS)`,`Operators`, `Helm charts`, `Microservices`, `Prometheus`, and most importantly,
 install and set up a K8s cluster (In the exam, you won't have to install a cluster from scratch, but knowing how to do
 it gives you a **huge advantage!**)
 
