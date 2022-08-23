@@ -96,7 +96,7 @@ information.
 
 * [Bret Fisher](https://www.bretfisher.com)
 
-  Bret is one of the best DevOps mentors out there too, Be sure to check
+  Bret is one of the best DevOps mentors out there, Be sure to check
   his [youtube channel](https://www.youtube.com/BretFisherDockerandDevOps) and his awesome examples
   on [Github](https://github.com/BretFisher#my-examples-and-templates-new-stuff-on-top) alongside your journey!
 
