@@ -775,7 +775,7 @@ This is how we prepare our bare-metal servers...
 <div id="disable-memory-swap">
 
 * All
-  ```sh
+  ```shell
   sudo swapoff -a
   ```
 
@@ -785,13 +785,15 @@ This is how we prepare our bare-metal servers...
 
 <div id="edit-hosts-file">
 
-Add all the server ips and correspond names in this file, e.g.
-<br />172.31.44.88 master
-<br />172.31.44.219 worker1
-<br />172.31.37.5 worker2
+* Add all the server ips and correspond names in `/etc/hosts` file, e.g.
+  ```text
+  172.31.44.88 master
+  172.31.44.219 worker1
+  172.31.37.5 worker2
+  ```
 
 * All
-  ```sh
+  ```shell
   sudo vim /etc/hosts
   ```
 
@@ -802,7 +804,7 @@ Add all the server ips and correspond names in this file, e.g.
 <div id="edit-hosts-names">
 
 * All
-  ```sh
+  ```shell
   sudo hostnamectl set-hostname <correspond names e.g. master>
   ```
 
@@ -813,7 +815,7 @@ Add all the server ips and correspond names in this file, e.g.
 <div id="prepare-installing-container-runtime">
 
 * All
-  ```sh
+  ```shell
   cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
   overlay
   br_netfilter
@@ -915,11 +917,11 @@ And now we should be able to working with `kubectl` command line...
 
 <div id="important-dir">
 
-* /etc/kubernetes
-* /etc/kubernetes/manifests/*
-* /var/lib/kubelet
-* /var/lib/kubelet/pki
-* /var/lib/kubelet/config.yaml
+* `/etc/kubernetes`
+* `/etc/kubernetes/manifests/*`
+* `/var/lib/kubelet`
+* `/var/lib/kubelet/pki`
+* `/var/lib/kubelet/config.yaml`
 
 </div>
 
@@ -927,11 +929,10 @@ And now we should be able to working with `kubectl` command line...
 
 <div id="cfg-kubectl">
 
-Now we only can interact with kubectl this way:
-
-```sh
-sudo kubectl get nodes --kubeconfig=/etc/kubernetes/admin.conf
-```
+* Now we only can interact with kubectl this way:
+  ```shell
+  sudo kubectl get nodes --kubeconfig=/etc/kubernetes/admin.conf
+  ```
 
 But it's not an efficient way. So we have two options:
 
@@ -944,22 +945,22 @@ Option `2` is not efficient too because its only works in the current session...
 But the option number `3` is awesome and actually a bets practise...
 
 * Create `.kube` folder
-  ```sh
+  ```shell
   mkdir -p ~/.kube
   ```
 
 * Copy `admin.conf` to this folder
-  ```sh
+  ```shell
   sudo cp -i /etc/kubernetes/admin.conf ~/.kube/config
   ```
 
 * Change owner of this file to ourselves
-  ```sh
+  ```shell
   sudo chown $(id -u):$(id -g) ~/.kube/config
   ```
 
 * Now everything is good, and we don't have to use `sudo` or `--kubeconfig`
-  ```sh
+  ```shell
   kubectl get nodes
   ```
 
@@ -997,7 +998,7 @@ IP address reachable from all other Pods in K8s cluster.
 
 * Container Port Mapping `WITHOUT Pods`
   <br />
-  Bind host port to application port in container (5432:5432)
+  Bind host port to application port in container (`5432:5432`)
 
 ### Pod Abstraction
 
@@ -1005,8 +1006,7 @@ IP address reachable from all other Pods in K8s cluster.
 * Own Network namespace
 * Virtual Ethernet Connection
 * Pod is a Host
-
-- [x] No conflicts...
+  - [x] No conflicts...
 
 ### Replacing `Container Runtime` easily
 
@@ -1148,18 +1148,18 @@ achieve these goals... the solution is `implenting a CNI Plugin`... In this scen
 
 `Pod Network IP Address Range` should not overlap with `Node IP Address Range` --> `VPC IP != Nodes IP`
 
-* the default range that Weave Net would like to use is 10.32.0.0/12 - a 12-bit prefix, where all addresses start with
-  the bit pattern 000010100010, or in decimal everything from 10.32.0.0 through 10.47.255.255.
+* the default range that Weave Net would like to use is `10.32.0.0/12` - a **12-bit prefix**, where all addresses start with
+  the bit pattern `000010100010`, or in decimal everything from `10.32.0.0` through `10.47.255.255`.
 
 * Master
-  ```sh
+  ```shell
   wget "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')" -O weave.yaml
   ```
 
 - [X] You can change the default IP range:
 
 * Master
-  ```sh
+  ```shell
   vim weave.yaml
   # Then find:
   # containers:
@@ -1234,16 +1234,14 @@ It is because we need to open a port on each server for weave-nets...
 * They listen on port `6783`
 
 * To check the weave-net status
+  ```shell
+  kubectl exec -n kube-system weave-net-4xtwz -c weave -- /home/weave/weave --local status
+  ```
 
-```shell
-kubectl exec -n kube-system weave-net-4xtwz -c weave -- /home/weave/weave --local status
-```
-
-And now you can deploy a test application
-
-```shell
-kubectl run test --image=nginx
-```
+* And now you can deploy a test application
+  ```shell
+  kubectl run test --image=nginx
+  ```
 
 </div>
 
