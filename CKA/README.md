@@ -69,6 +69,14 @@
   <li>
     Kubernetes Networking
     <ul>
+      <li>
+            K8s Namespaces
+        <ul>
+            <li><a href="#networking-What-is-a-Namespace">What is a Namespace?</a>
+            <li><a href="#networking-Why-use-Namespaces">Why use Namespaces?</a>
+            <li><a href="#networking-kube-system-Namespaces">kube-system Namespaces?</a>
+        </ul>
+      </li>
       <li><a href="#container-communication">Container Communication</a></li>
       <li><a href="#pod-solve-port-allocation">Pods - Solving the port allocation problem</a></li>
       <li><a href="#Multiple-containers-in-a-pod">Multiple containers in a pod</a></li>
@@ -973,6 +981,123 @@ But the option number `3` is awesome and actually a bets practise...
 <div id="">
 Lets Talk about networking and communication in K8S
 </div>
+
+## K8s Namespaces
+
+<div id="networking-K8s-Namespaces">
+
+### What is a Namespace?
+
+<div id="networking-What-is-a-Namespace">
+
+* [Namepsace docs](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
+
+What is a Namespace?
+
+* Organise resources in namespaces
+* Virtual cluster inside a cluster ("Cluster inside a Cluster")
+
+4 Namespaces per Default:
+
+1) `kube-syatem`
+2) `kube-public`
+3) `kube-node-lease`
+4) `default`
+
+----
+
+Create Namespace:
+
+1) Command-line
+    ```shell
+    kubectl create namespace <MY_NAMESPACE>
+    ```
+2) Configuration File
+    ```yaml
+    apiVersion: ...
+    metadata:
+      name: ...
+      namespace: <MY_NAMESPACE>
+    ```
+
+</div> <!-- What is a Namespace? -->
+
+### Why use Namespaces?
+
+<div id="networking-Why-use-Namespaces">
+
+1) Resource grouped in Namespace
+2) Conflicts: Mant teams, same application
+3) Resource Sharing:
+    * Staging and Development
+    * Blue/Green Deployment
+4) Access and Resource Limits on Namespace
+    * Each team has its own, isolated environment
+    * Limit: CPU, RAM, Storage per NS
+
+---
+
+Use Cases when vto use Namespace
+
+1) **Structure** your components
+2) **Avoid conflicts** between teams
+3) **Share services** between different environment
+4) **Access and Resource Limits** on Namespace Level
+
+---
+
+Some other note
+
+* You can't access most resources from another Namespace
+
+---
+
+* There are some components, which can't be created within a Namespace
+    * They are live globally in a cluster
+    * You can't isolate them
+
+* You can get list of all of those by this command
+    ```shell
+    kubectl api-resources --namespaced=false
+    ```
+
+</div> <!-- Why use Namespaces? -->
+
+### kube-system Namespaces?
+
+<div id="networking-kube-system-Namespaces">
+
+Now that we know what Namespaces are and How they are used,
+Its time to jump into these question:
+
+1) What Namespaces do we have in our cluster?
+2) What Pods are rtunning in those Namespaces?
+
+---
+
+```shell
+kubectl get ns
+```
+
+* `default`:
+    * For your applications, when you don't create a specific ns
+    * The `default` Namespace is used as default when executing `kubectl` commands
+    * To get another Namespace: `kubectl get ns -n kube-syatem`
+* `kube-system`:
+    * Control Plane Pods are located in `kube-system` ns
+* `kube-public`:
+    * It contains a single ConfigMap object, `cluster-info`, that aids discovery and security bootstrap (basically,
+      contains the `CA` for the cluster and such). This object is readable without authentication.
+* `kube-node-lease`:
+    * It makes node heartbeats significantly cheaper from both scalability and performance perspective.
+
+Sources:
+
+* [Stackoverflow - kube-node-lease](https://stackoverflow.com/a/59660121/15545196)
+* [What is a Kubernetes Namespace? by VMWare](https://www.vmware.com/topics/glossary/content/kubernetes-namespace.html)
+
+</div> <!-- kube-system Namespaces? -->
+</div> <!-- K8s Namespaces -->
 
 ## Container Communication
 
