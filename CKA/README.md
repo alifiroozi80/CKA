@@ -785,16 +785,16 @@ This is how we prepare our bare-metal servers...
 
 <div id="edit-hosts-file">
 
+* All
+  ```shell
+  sudo vim /etc/hosts
+  ```
+
 * Add all the server ips and correspond names in `/etc/hosts` file, e.g.
   ```text
   172.31.44.88 master
   172.31.44.219 worker1
   172.31.37.5 worker2
-  ```
-
-* All
-  ```shell
-  sudo vim /etc/hosts
   ```
 
 </div>
@@ -1006,7 +1006,7 @@ IP address reachable from all other Pods in K8s cluster.
 * Own Network namespace
 * Virtual Ethernet Connection
 * Pod is a Host
-  - [x] No conflicts...
+    - [x] No conflicts...
 
 ### Replacing `Container Runtime` easily
 
@@ -1062,11 +1062,11 @@ Networking of `WITHIIN PODS`
 2) pods on `same Node` can `Communicate` with `that IP address`
 3) pods on different Node can `Communicate` with `that IP address without NAT`(Network Address Translation)
 
-- [x] k8s doesnt care about the exact IP address
+- [ ] k8s doesn't care about the exact IP address
 
 ### Network Plugins
 
-* Many networking solutions, which implement this module
+Many networking solutions, which implement this module
 
 1) [flannel](https://github.com/flannel-io/flannel)
 2) [waveworks](https://www.weave.works/)
@@ -1102,13 +1102,10 @@ doesn't care!
 
 * They `can't talk directly`, because of private isolated networks
 * Pods can communicate via `Gateways`
-* Network Plugin creates `1 large Pod Network` -->
-
-1) Why? All Nodes are in the `same network`
-2) Can talk directly via their IPs
-
+* Network Plugin creates `1 large Pod Network`
+    1) Why? All Nodes are in the `same network`
+    2) Can talk directly via their IPs
 * Each Node can access via the virtual pod network on its Node
-
 * K8s requirements for CNI Plugins
     1) Every Pod gets its **own unique IP address**
     2) Pods on **same Node** can **communicate** with **that IP address**
@@ -1148,8 +1145,12 @@ achieve these goals... the solution is `implenting a CNI Plugin`... In this scen
 
 `Pod Network IP Address Range` should not overlap with `Node IP Address Range` --> `VPC IP != Nodes IP`
 
-* the default range that Weave Net would like to use is `10.32.0.0/12` - a **12-bit prefix**, where all addresses start with
+* the default range that Weave Net would like to use is `10.32.0.0/12` - a **12-bit prefix**, where all addresses start
+  with
   the bit pattern `000010100010`, or in decimal everything from `10.32.0.0` through `10.47.255.255`.
+
+* Before installing Weave Net, you should make sure the following ports are not blocked by your firewall: `TCP 6783` and
+  `UDP 6783/6784`. For more details, see the [docs](https://www.weave.works/docs/net/latest/kubernetes/kube-addon/).
 
 * Master
   ```shell
@@ -1193,16 +1194,14 @@ We already installed:
 * kubectl
 * [X] Now lets joining the worker nodes...
 
-NOTE: A bidirectional trust needs to be established:
-
-1) Discovery (Node trust the K8s Control Plane)
-2) TLS bootstrap (K8s Control Plane trust Node)
+* NOTE: A bidirectional trust needs to be established:
+    1) Discovery (Node trust the K8s Control Plane)
+    2) TLS bootstrap (K8s Control Plane trust Node)
 
 * master
-
-```shell
-kubeadm token create --print-join-command
-```
+    ```shell
+    kubeadm token create --print-join-command
+    ```
 
 paste the output of this command on `WSorker Node(s)`, note that you can use your this output as much as you want...
 
@@ -1211,9 +1210,9 @@ paste the output of this command on `WSorker Node(s)`, note that you can use you
 <div id="kubeadm-join-phases">
 
 * preflight
-* [x] run join pre-flight checks
+    * [x] run join pre-flight checks
 * kubelet-start
-* [x] write kubelet settings, certificates and (re)starting the kubelet
+    * [x] write kubelet settings, certificates and (re)starting the kubelet
 
 </div>
 
@@ -1258,81 +1257,74 @@ It is because we need to open a port on each server for weave-nets...
 Now let's deploy a nginx Deployment with 2 Pod and a test Service for it...
 
 * Nginx Deployment
-
-```shell
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-  labels:
-    app: nginx
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: nginx
-  template:
+    ```shell
+    apiVersion: apps/v1
+    kind: Deployment
     metadata:
+      name: nginx-deployment
       labels:
         app: nginx
     spec:
-      containers:
-      - name: nginx
-        image: nginx
-        ports:
-        - containerPort: 80                 
-```
+      replicas: 2
+      selector:
+        matchLabels:
+          app: nginx
+      template:
+        metadata:
+          labels:
+            app: nginx
+        spec:
+          containers:
+          - name: nginx
+            image: nginx
+            ports:
+            - containerPort: 80                 
+    ```
 
 * Service
-
-```shell
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-service
-  labels:
-    app: nginx
-    svc: nginx-test
-spec:
-  selector:
-    app: nginx
-  ports:
-  - protocol: TCP
-    port: 8080
-    targetPort: 80
-```
+    ```shell
+    apiVersion: v1
+    kind: Service
+    metadata:
+      name: nginx-service
+      labels:
+        app: nginx
+        svc: nginx-test
+    spec:
+      selector:
+        app: nginx
+      ports:
+      - protocol: TCP
+        port: 8080
+        targetPort: 80
+    ```
 
 * [X] Important commands:
 
 * Check the IP Addresses
-
-```shell
-kubectl get all -o wide
-```
+    ```shell
+    kubectl get all -o wide
+    ```
 
 * Check the IP + Endpoints
-
-```shell
-kubectl describe svc nginx
-```
+    ```shell
+    kubectl describe svc nginx
+    ```
 
 * Check Endpoints
-
-```shell
-kubectl get ep
-```
+    ```shell
+    kubectl get ep
+    ```
 
 * Check every label
-
-```shell
-kubectl get XXX --show-labels
-```
+    ```shell
+    kubectl get XXX --show-labels
+    ```
 
 * Filter based on labels
-
-```shell
-kubectl logs/get/etc -l <label>=<value>
-```
+    ```shell
+    kubectl logs/get/etc -l <label>=<value>
+    ```
 
 ### How requests are forwarded from Service to Pod
 
@@ -1361,24 +1353,20 @@ kubectl scale deployment nginx-deployment --replicas=5
 We can track our changes in cluster via `--record` flag...
 
 * `--record` flag is almost valid for most of the K8s components (scale/create/etc)
-
-```shell
-kubectl scale deployment nginx-deployment --replicas=5 --record
-```
+    ```shell
+    kubectl scale deployment nginx-deployment --replicas=5 --record
+    ```
 
 then you see it via:
 
 1) Command line
-
-```shell
-kubectl rollout history deployment nginx-deployment
-```
-
+    ```shell
+    kubectl rollout history deployment nginx-deployment
+    ```
 2) in `annotations`
-
-```shell
-kubectl get deployments.apps nginx-deployment -o yaml | less
-```
+    ```shell
+    kubectl get deployments.apps nginx-deployment -o yaml | less
+    ```
 
 </div>
 
@@ -1402,16 +1390,14 @@ kubectl exec -it test-nginx-svc -- bash
 Then we want to curl the nginx app via its service:
 
 1) IP:PORT
-
-```shell
-curl http://<SERVICE-IP>:8080
-```
+    ```shell
+    curl http://<SERVICE-IP>:8080
+    ```
 
 2) DNS
-
-```shell
-curl http://nginx-service:8080
-```
+    ```shell
+    curl http://nginx-service:8080
+    ```
 
 </div>
 
@@ -1432,10 +1418,9 @@ DNS Server is:
 * In production cluster, `minimum of 2 replicas`!
 
 * Check logs of CoreDNS
-
-```bash
-kubectl logs -n kube-system -l k8s-app=kube-dns
-```
+    ```bash
+    kubectl logs -n kube-system -l k8s-app=kube-dns
+    ```
 
 <img src="images/core-dns-2.png" />
 
@@ -1443,7 +1428,7 @@ kubectl logs -n kube-system -l k8s-app=kube-dns
 kubectl run -it test-nginx-svc --image=nginx -- bash
 ```
 
-Inside of that:
+Inside that:
 
 ```bash
 cat /etc/resolv.conf 
@@ -1505,46 +1490,45 @@ sudo vim /etc/kubernetes/manifests/kube-apiserver.yaml
 ```
 
 * See all defaults configurations:
-
-```yaml
-# $ kubeadm config print init-defaults
-apiVersion: kubeadm.k8s.io/v1beta3
-bootstrapTokens:
-  - groups:
-      - system:bootstrappers:kubeadm:default-node-token
-    token: abcdef.0123456789abcdef
-    ttl: 24h0m0s
-    usages:
-      - signing
-      - authentication
-kind: InitConfiguration
-localAPIEndpoint:
-  advertiseAddress: 1.2.3.4
-  bindPort: 6443
-nodeRegistration:
-  criSocket: unix:///var/run/containerd/containerd.sock
-  imagePullPolicy: IfNotPresent
-  name: node
-  taints: null
----
-apiServer:
-  timeoutForControlPlane: 4m0s
-apiVersion: kubeadm.k8s.io/v1beta3
-certificatesDir: /etc/kubernetes/pki
-clusterName: kubernetes
-controllerManager: { }
-dns: { }
-etcd:
-  local:
-    dataDir: /var/lib/etcd
-imageRepository: k8s.gcr.io
-kind: ClusterConfiguration
-kubernetesVersion: 1.24.0
-networking:
-  dnsDomain: cluster.local
-  serviceSubnet: 10.96.0.0/12
-scheduler: { }
-```
+    ```yaml
+    # $ kubeadm config print init-defaults
+    apiVersion: kubeadm.k8s.io/v1beta3
+    bootstrapTokens:
+      - groups:
+          - system:bootstrappers:kubeadm:default-node-token
+        token: abcdef.0123456789abcdef
+        ttl: 24h0m0s
+        usages:
+          - signing
+          - authentication
+    kind: InitConfiguration
+    localAPIEndpoint:
+      advertiseAddress: 1.2.3.4
+      bindPort: 6443
+    nodeRegistration:
+      criSocket: unix:///var/run/containerd/containerd.sock
+      imagePullPolicy: IfNotPresent
+      name: node
+      taints: null
+    ---
+    apiServer:
+      timeoutForControlPlane: 4m0s
+    apiVersion: kubeadm.k8s.io/v1beta3
+    certificatesDir: /etc/kubernetes/pki
+    clusterName: kubernetes
+    controllerManager: { }
+    dns: { }
+    etcd:
+      local:
+        dataDir: /var/lib/etcd
+    imageRepository: k8s.gcr.io
+    kind: ClusterConfiguration
+    kubernetesVersion: 1.24.0
+    networking:
+      dnsDomain: cluster.local
+      serviceSubnet: 10.96.0.0/12
+    scheduler: { }
+    ```
 
 ### Change Default CIDR IP Range
 
@@ -1554,10 +1538,9 @@ scheduler: { }
 
 1) when bootstrapping the cluster via `kubeadm init --service-cidr <IP Range>`
 2) Change `kube-apiserver` directly (kubelet periodically scans the configurations for changes)
-
-```shell
-sudo vim /etc/kubernetes/manifests/kube-apiserver.yaml
-```
+    ```shell
+    sudo vim /etc/kubernetes/manifests/kube-apiserver.yaml
+    ```
 
 * Note that with Number `2`, you are going to
   get `The connection to the server IP:6443 was refused - did you specify the right host or port?` error for a while; so
