@@ -1037,7 +1037,7 @@ Create Namespace:
 
 ---
 
-Use Cases when vto use Namespace
+Use Cases when to use Namespace
 
 1) **Structure** your components
 2) **Avoid conflicts** between teams
@@ -1068,10 +1068,10 @@ Some other note
 <div id="networking-kube-system-Namespaces">
 
 Now that we know what Namespaces are and How they are used,
-Its time to jump into these question:
+It's time to jump into these question:
 
 1) What Namespaces do we have in our cluster?
-2) What Pods are rtunning in those Namespaces?
+2) What Pods are running in those Namespaces?
 
 ---
 
