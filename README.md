@@ -39,7 +39,7 @@ Zero-To-Expert
 
 - [x] Add real-world examples
 - [x] Add exam tips
-- [ ] Add `Helm` charts - Package Manager of Kubernetes
+- [x] Add `Helm` charts - Package Manager of Kubernetes
 - [ ] Add `Operators`
 - [ ] Add monitoring - `Prometheus`
 - [ ] Add `Microservices`
