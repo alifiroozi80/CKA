@@ -8,9 +8,7 @@
 <h3 align="center">Certified Kubernetes Administrator</h3>
 
   <p align="center">
-    Becoming a Certified Kubernetes Administrator from scratch!
-    <br />
-    <a href="https://github.com/alifiroozi80/CKA/tree/main/CKA"><strong>Go to the course.»</strong></a>
+    Become an EXPERT in Kubernetes from scratch!
     <br />
     <br />
     <a href="https://github.com/alifiroozi80/CKA/issues">Report Bug</a>
@@ -21,9 +19,9 @@
 
 ---
 
-If you want to become a Certified Kubernetes Administrator or learn Kubernetes from scratch and understand everything, this repo is a good choice.
+If you want to become a Certified Kubernetes Administrator, or you want to become an EXPERT in Kubernetes, learn Kubernetes from scratch and understand everything, this repo is a good choice.
 
-In this repo, you'll be prepared to pass the exam. You'll also learn more about Kubernetes concepts that are not relevant to the exam, such as `Kubernetes on AWS (EKS)`, `Operators`, `Helm charts`, `Microservices`, `Prometheus`, and most importantly, install and set up a `K8s cluster` (In the exam, you won't have to install a cluster from scratch, but knowing how to do it gives you a **huge advantage!**)
+In this repo, you'll be prepared to pass the exam. You'll also learn more about Kubernetes concepts that are not in the exam, such as `Kubernetes on AWS (EKS)`, `Operators`, `Helm charts`, `Microservices`, `Prometheus`, and most importantly, install and set up a K8s cluster from scratch (In the exam, you won't have to install a cluster, but knowing how to do it gives you a **huge advantage!**)
 
 With this repo and other sources I mentioned below, you'll prepare to pass the exam and be confident about your Kubernetes knowledge!
 Have Fun!
