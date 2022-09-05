@@ -1591,9 +1591,9 @@ options ndots:5
 
 <div id="Configure-Service-IP-Address">
 
-1) As we already know, the Pod IP Addresses comes from `CoreDNS`
-2) Api-server, Etcd, Kube-Proxy, Scheduler, controller IP Addresses comes from `Server/Node` IP Address
-3) But howabout the services in K8s (`ClusterIP Type`)?
+1) As we already know, the Pod IP Addresses comes from `CNI`
+2)` Api-server`, `Etcd`, `Kube-Proxy`, `Scheduler` and `controller-Manager` IP Addresses comes from `Server/Node` IP Address
+3) But how about the Services in K8s (`ClusterIP Type`)?
 
 ### Where is Service IP Range configured?
 
@@ -1667,10 +1667,10 @@ sudo vim /etc/kubernetes/manifests/kube-apiserver.yaml
     sudo vim /etc/kubernetes/manifests/kube-apiserver.yaml
     ```
 
-* Note that with Number `2`, you are going to
-  get `The connection to the server IP:6443 was refused - did you specify the right host or port?` error for a while; so
-  you have to wait a couple of minutes to kube-apiserver start again...
-* New CIDR block only applies for newly created Services, it means old Services still remains to the old CIDR block, for
+* Note that with option number `2`, you are going to
+  get `The connection to the server IP:6443 was refused - did you specify the right host or port?` error for a while, so
+  you have to wait a couple of minutes to `kube-apiserver` start again...
+* New CIDR block only applies for **newly** created Services, it means old Services still remains to the old CIDR block, for
   testing:
 
 ```shell
@@ -1691,8 +1691,8 @@ Then Check the newly created Service...
 
 <div id="NodePort-Service-Type">
 
-* ClusterIP = Internal Service
-* NodePort = External Service
+* `ClusterIP` = Internal Service
+* `NodePort` = External Service
 
 ```yaml
 apiVersion: v1
