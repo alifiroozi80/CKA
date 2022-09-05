@@ -1027,7 +1027,7 @@ Create Namespace:
 <div id="networking-Why-use-Namespaces">
 
 1) Resource grouped in Namespace
-2) Conflicts: Mant teams, same application
+2) Conflicts: Many teams, same application
 3) Resource Sharing:
     * Staging and Development
     * Blue/Green Deployment
@@ -1169,7 +1169,7 @@ Multiple containers in a Pod
 
 <div id="Container-network-interface">
 
-Networking of `WITHIIN PODS`
+Networking `WITHIIN PODS`
 
 </div>
 
@@ -1379,7 +1379,7 @@ It is because we need to open a port on each server for weave-nets...
 
 <div id="Deploy-and-test-an-App">
 
-Now let's deploy a nginx Deployment with 2 Pod and a test Service for it...
+Now let's deploy an nginx Deployment with 2 Pod and a test Service for it
 
 * Nginx Deployment
     ```shell
