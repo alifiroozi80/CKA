@@ -6462,7 +6462,8 @@ But remember :You have to clean up a little bit of this file, e.g. `creationTime
 
 * [Open Source Curriculum for CNCF Certification Courses](https://github.com/cncf/curriculum)
 * [4 Most Important Kubernetes Interview Questions](https://www.linkedin.com/pulse/4-most-important-kubernetes-interview-questions-raju-kumar-)
-* [Virtual Kubernetes Clusters that run inside regular namespaces](https://www.vcluster.com)
+* [Vcluster - Virtual Kubernetes Clusters that run inside regular namespaces](https://www.vcluster.com)
+* [k9s - Kubernetes CLI To Manage Your Clusters In Style!](https://k9scli.io)
 
 </div>
 
