@@ -3522,8 +3522,6 @@ Introduction to Kubernetes Volumes, How to `persist data` in K8s using volumes?
 
 <div id="The-need-for-Volumes">
 
----
-
 ### Storage Requirements
 
 <div id="Storage-Requirements">
@@ -3542,7 +3540,7 @@ Introduction to Kubernetes Volumes, How to `persist data` in K8s using volumes?
 
 * Persistent Volume is more like `A cluster resource`. (like CPU & RAM)
 * Create via YAML file
-    * `kind`: PersistentVolume
+    * `kind: PersistentVolume`
     * `spec`: e.g. how much storage?
 * Needs actual physical storage, like:
     * Cloud Storage
@@ -3551,7 +3549,7 @@ Introduction to Kubernetes Volumes, How to `persist data` in K8s using volumes?
 
 ---
 
-Where does this storage come from and who makes it available to the cluster?
+Where does this storage come from, and who makes it available to the cluster?
 
 * What **Type of storage** do you need?
 * **You** need to **create and manage** them by yourself
