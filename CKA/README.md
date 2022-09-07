@@ -9,6 +9,7 @@
 
   <p align="center">
     The code review and content of CKA exam...
+  </p>
 </div>
 <br>
 <div id="top">
@@ -370,6 +371,29 @@
       </ul>
   </li>
   <li>
+      Owners and dependents
+      <ul>
+        <li><a href="#Owners-and-dependents-What-is-the-Owners-and-dependents-concept-in-K8s">What is the Owners and dependents concept in K8s?</a>
+            <ul>
+                <li><a href="#Owners-and-dependents-Finding-out-the-owners-of-an-object">Finding out the owners of an object</a></li>
+                <li><a href="#Owners-and-dependents-Listing-objects-with-their-owners">Listing objects with their owners</a></li>
+            </ul>
+        </li>
+        <li><a href="#Owners-and-dependents-Deletion-policy">Deletion policy</a>
+            <ul>
+                <li><a href="#Owners-and-dependents-What-happens-when-an-object-is-deleted">What happens when an object is deleted</a></li>
+            </ul>
+        </li>
+        <li><a href="#Owners-and-dependents-Orphaning-pods">Orphaning pods</a>
+            <ul>
+                <li><a href="#Owners-and-dependents-When-and-why-would-we-have-orphans">When and why would we have orphans?</a></li>
+                <li><a href="#Owners-and-dependents-Finding-orphan-objects">Finding orphan objects</a></li>
+                <li><a href="#Owners-and-dependents-Deleting-orphan-pods">Deleting orphan pods</a></li>
+            </ul>
+        </li>
+      </ul>
+  </li>
+  <li>
       ETCD Backup & Restore
       <ul>
         <li><a href="#ETCD-Backup-Restore-What-etcd-stores">What etcd stores?</a></li>
@@ -510,7 +534,6 @@
   </li>
   </ol>
 </details>
-
 </div>
 
 # What is Kubernetes?
@@ -1382,7 +1405,7 @@ It is because we need to open a port on each server for weave-nets...
 Now let's deploy an nginx Deployment with 2 Pod and a test Service for it
 
 * Nginx Deployment
-    ```shell
+    ```yaml
     apiVersion: apps/v1
     kind: Deployment
     metadata:
@@ -1407,7 +1430,7 @@ Now let's deploy an nginx Deployment with 2 Pod and a test Service for it
     ```
 
 * Service
-    ```shell
+    ```yaml
     apiVersion: v1
     kind: Service
     metadata:
@@ -1592,7 +1615,8 @@ options ndots:5
 <div id="Configure-Service-IP-Address">
 
 1) As we already know, the Pod IP Addresses comes from `CNI`
-2)` Api-server`, `Etcd`, `Kube-Proxy`, `Scheduler` and `controller-Manager` IP Addresses comes from `Server/Node` IP Address
+   2)` Api-server`, `Etcd`, `Kube-Proxy`, `Scheduler` and `controller-Manager` IP Addresses comes from `Server/Node` IP
+   Address
 3) But how about the Services in K8s (`ClusterIP Type`)?
 
 ### Where is Service IP Range configured?
@@ -1670,7 +1694,8 @@ sudo vim /etc/kubernetes/manifests/kube-apiserver.yaml
 * Note that with option number `2`, you are going to
   get `The connection to the server IP:6443 was refused - did you specify the right host or port?` error for a while, so
   you have to wait a couple of minutes to `kube-apiserver` start again...
-* New CIDR block only applies for **newly** created Services, it means old Services still remains to the old CIDR block, for
+* New CIDR block only applies for **newly** created Services, it means old Services still remains to the old CIDR block,
+  for
   testing:
 
 ```shell
@@ -4963,6 +4988,158 @@ REVISION  CHANGE-CAUSE # Here we have 5 revision
 
 </div> <!-- Rollback -->
 </div> <!-- Update Deployment - Strategies -->
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+# Owners and dependents
+
+## What is the Owners and dependents concept in K8s?
+
+<div id="Owners-and-dependents-What-is-the-Owners-and-dependents-concept-in-K8s">
+
+* [Owners and Dependents](https://kubernetes.io/docs/concepts/overview/working-with-objects/owners-dependents)
+* Some objects are created by other objects (example: `Pods` created by `replicaSets`, themselves created
+  by `Deployments`)
+* When an owner object is deleted, its dependents are deleted (this is the default behavior; it can be changed)
+* We can delete a dependent directly if we want (but generally, the owner will recreate another right away)
+* An object can have multiple owners
+
+### Finding out the owners of an object
+
+<div id="Owners-and-dependents-Finding-out-the-owners-of-an-object">
+
+* The owners are recorded in the field `ownerReferences` in the `metadata` block
+* Let's create a deployment running nginx
+    ```shell
+    kubectl create deployment owner-example --image=nginx --replicas 3
+    ```
+* Check its Pods
+    ```shell
+    kubectl get pods -l app=owner-example -o yaml
+    ```
+    ```yaml
+    [...]
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      # These pods are owned by a ReplicaSet named owner-example-xxxxxxxxxx.
+      kind: ReplicaSet
+      name: owner-example-c466f59dd
+      uid: 96a164d6-1a9b-4ec8-8d07-ac9b3bb3278e
+      resourceVersion: "296451"
+      uid: a9d312f4-23d6-4efa-b75c-73178b3e6486
+    [...]
+    ```
+
+</div> <!-- Finding out the owners of an object -->
+
+### Listing objects with their owners
+
+<div id="Owners-and-dependents-Listing-objects-with-their-owners">
+
+* This is a good opportunity to review the <a href="#Output-Option-JSONPath-Troubleshooting">custom-columns</a> output!
+* Let's show all Pods with their owners:
+    ```shell
+    kubectl get pod -o custom-columns=\
+    NAME:.metadata.name,\
+    OWNER-KIND:".metadata.ownerReferences[0].kind",\
+    OWNER-NAME:".metadata.ownerReferences[0].name"
+    ```
+
+</div> <!-- Listing objects with their owners -->
+</div> <!-- What is the Owners and dependents concept in K8s? -->
+
+## Deletion policy
+
+<div id="Owners-and-dependents-Deletion-policy">
+
+* When deleting an object through the API, three policies are
+  available ([Docs](https://kubernetes.io/docs/concepts/architecture/garbage-collection/#cascading-deletion)):
+    * `foreground` (API call returns after all dependents are deleted)
+    * `background` (API call returns immediately; dependents are scheduled for deletion)
+    * `orphan` (the dependents are not deleted)
+* When deleting an object with `kubectl`, this is selected with `--cascade`:
+    * `--cascade=background` deletes all dependent objects (default)
+    * `--cascade=orphan` orphans dependent objects
+
+### What happens when an object is deleted
+
+<div id="Owners-and-dependents-What-happens-when-an-object-is-deleted">
+
+* It is removed from the list of owners of its dependents
+* If, for one of these dependents, the list of owners becomes empty ...
+    * If the policy is `orphan`, the object stays
+    * Otherwise, the object is deleted
+
+</div> <!-- What happens when an object is deleted -->
+</div> <!-- Deletion policy -->
+
+## Orphaning pods
+
+<div id="Owners-and-dependents-Orphaning-pods">
+
+We are going to delete the `Deployment` and `replicaSet` that we created without deleting the corresponding Pods!
+
+* Delete the Deployment
+    ```shell
+    kubectl delete deployment owner-example --cascade=orphan
+    ```
+* Delete the replicaSet
+    ```shell
+    kubectl delete rs -l app=owner-example --cascade=orphan
+    ```
+* Check that the pods are still here
+    ```shell
+    kubectl get pods
+    ```
+
+### When and why would we have orphans?
+
+<div id="Owners-and-dependents-When-and-why-would-we-have-orphans">
+
+* If we remove an owner and explicitly instruct the API to orphan dependents
+* If we change the labels on a dependent, so that it's not selected anymore (e.g. change the `app: owner-example` in the
+  pods)
+* If a deployment tool that we're using does these things for us
+* If there is a serious problem within API machinery or other components (i.e. "this should not happen")
+
+</div> <!-- When and why would we have orphans? -->
+
+### Finding orphan objects
+
+<div id="Owners-and-dependents-Finding-orphan-objects">
+
+1) We're going to output all pods in `JSON` format
+2) Then we will use `jq` to keep only the ones without an owner
+3) And we will display their name
+
+* List all pods that do not have an owner
+    ```shell
+    kubectl get pod -o json | jq -r "
+          .items[]
+          | select(.metadata.ownerReferences|not)
+          | .metadata.name"
+    ```
+
+</div> <!-- Finding orphan objects -->
+
+### Deleting orphan pods
+
+<div id="Owners-and-dependents-Deleting-orphan-pods">
+
+Now that we can list orphan pods, deleting them is easy
+
+* Add `| xargs kubectl delete pod` to the previous command:
+    ```shell
+    kubectl get pod -o json | jq -r "
+          .items[]
+          | select(.metadata.ownerReferences|not)
+          | .metadata.name" | xargs kubectl delete pod
+    ```
+
+</div> <!-- Deleting orphan pods -->
+</div> <!-- Orphaning pods -->
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
