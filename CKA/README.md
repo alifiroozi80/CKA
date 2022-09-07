@@ -121,6 +121,8 @@
             <li><a href="#Change-Default-CIDR-IP-Range">Change Default CIDR IP Range</a></li>
           </ul>
         </li>
+        <li><a href="#Demo-Custom-Load-Balancing">Demo: Custom Load Balancing</a></li>
+        <li><a href="#Networking-Summary">Summary</a></li>
       </ul>
   </li>
     <li>
@@ -1402,7 +1404,7 @@ It is because we need to open a port on each server for weave-nets...
 
 <div id="Deploy-and-test-an-App">
 
-Now let's deploy an nginx Deployment with 2 Pod and a test Service for it
+Now let's deploy a nginx Deployment with 2 Pods and a test Service for it
 
 * Nginx Deployment
     ```yaml
@@ -1708,6 +1710,132 @@ Then Check the newly created Service...
 </div> <!-- Where is Service IP Range configured? -->
 </div> <!-- Configure Service IP Address -->
 
+## Demo: Custom Load Balancing
+
+<div id="Demo-Custom-Load-Balancing">
+
+Our goal here is to create a service that **balances connections to two different deployments**. You might use this as a
+simplistic way to run two versions of your apps in parallel.
+
+In the real world, you'll likely use a 3rd party load balancer to provide advanced **blue/green** or **canary-style**
+deployments. Still, this assignment will help further understand how `service selectors` are used to finding pods to use
+as service endpoints.
+
+For simplicity, version 1 of our application will use the `NGINX` image, and version 2 will use the `Apache` image. They
+both listen on port `80` by default.
+
+When we connect to the service, we expect to see some requests served by `NGINX` and some by `Apache`.
+
+---
+
+Let's create a clusterIP service
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: custom-lb
+  name: custom-lb
+spec:
+  type: ClusterIP
+  # The selector of that service will need to match the pods created by both deployments.
+  selector:
+    svc: clb
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+```
+
+Then create our Nginx Deployment
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      # We will need to change the deployment specification to add an extra label (svc: clb) to be used solely by the service.
+      labels:
+        app: nginx
+        svc: clb
+    spec:
+      containers:
+        - image: nginx
+          name: nginx
+          ports:
+            - containerPort: 80
+```
+
+Then create our Apache Deployment
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: apache
+  name: apache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apache
+  template:
+    metadata:
+      # We will need to change the deployment specification to add an extra label (svc: clb) to be used solely by the service.
+      labels:
+        app: apache
+        svc: clb
+    spec:
+      containers:
+        - image: httpd
+          name: httpd
+          ports:
+            - containerPort: 80
+```
+
+---
+
+Apply the files, then use the `curl` command to show yield responses from `NGINX` and `Apache`.
+
+Note: you won't see a perfect round-robin, i.e., NGINX/Apache/NGINX/Apache, etc., but on average, Apache and NGINX
+should serve approximately `50%` of the requests each.
+
+</div> <!-- Demo: Custom Load Balancing -->
+
+## Summary
+
+<div id="Networking-Summary">
+
+### Multiple moving parts
+
+* The "**pod-to-pod network**" or "**pod network**":
+    * Provides communication between pods and nodes
+    * Is generally implemented with CNI plugins
+* The "**pod-to-service network**":
+    * Provides internal communication and load balancing
+    * Is generally implemented with `kube-proxy`
+* Network policies:
+    * Provide firewalling and isolation
+    * Can be bundled with the "**pod network**" or provided by another component
+* Inbound traffic can be handled by multiple components:
+    * Something like `kube-proxy` (for `NodePort` services) (Don't worry. We're going to go through `NodePort` in the
+      next section)
+    * Load balancers (ideally, connected to the pod network)
+* It is possible to use multiple pod networks in parallel (with "meta-plugins" like CNI-Genie or Multus)
+
+</div> <!-- Summary -->
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 # Make application accessible from outside the cluster
@@ -1747,6 +1875,8 @@ spec:
 * NodePort, `Opens Port on each Worker Node`
 * External traffic has access to `fixed port` on each Worker Node!
 * Range: `30000-32676`
+* Sometimes, it's the only available option for external traffic (e.g. most clusters deployed with `kubeadm`
+  or `on-premises`)
 
 NodePort Service Accessibility:
 
