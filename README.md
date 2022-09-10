@@ -93,6 +93,13 @@ The license is under the MIT License. See [LICENSE](https://github.com/alifirooz
 
   Also, I love his [podcast](https://www.bretfisher.com/podcast/), he invites great guests, and they discuss great topics. So for being always up-to-date and learning much more, listen to it.
 
+* [Container Training](https://github.com/jpetazzo/container.training)
+
+  Jérôme is a Docker captain who has a great repo about container training.
+  In this repo, for a better understanding of some concepts, I used some examples in his repo.
+  
+  Be sure to check his repo as well.
+
 ---
 
 ## ❤ Show your support
