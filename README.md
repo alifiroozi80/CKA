@@ -40,7 +40,7 @@ Have Fun!
 - [x] Add real-world examples
 - [x] Add exam tips
 - [x] Add `Helm` - Package Manager of Kubernetes
-- [ ] Add `Operators`
+- [x] Add `Operators`
 - [ ] Add monitoring - `Prometheus`
 - [ ] Add `Microservices`
 - [ ] Kubernetes on AWS - `EKS`
