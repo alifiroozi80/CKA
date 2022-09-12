@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/alifiroozi80/CKA/tree/main/CKA">
-    <img src="images/logo.png" alt="Logo" width="150" height="150">
+    <img src="images/cka-logo.png" alt="Logo" width="150" height="150">
   </a>
 
 <h3 align="center">CKA Codes</h3>
