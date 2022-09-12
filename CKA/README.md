@@ -1,7 +1,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/alifiroozi80/CKA">
+  <a href="https://github.com/alifiroozi80/CKA/tree/main/CKA">
     <img src="images/logo.png" alt="Logo" width="150" height="150">
   </a>
 
@@ -6767,7 +6767,7 @@ But remember :You have to clean up a little bit of this file, e.g. `creationTime
 
 * [Open Source Curriculum for CNCF Certification Courses](https://github.com/cncf/curriculum)
 * [4 Most Important Kubernetes Interview Questions](https://www.linkedin.com/pulse/4-most-important-kubernetes-interview-questions-raju-kumar-)
-* [Vcluster - Virtual Kubernetes Clusters that run inside regular namespaces](https://www.vcluster.com)
+* VCluster | [Website](https://www.vcluster.com) | [Docs](https://www.vcluster.com/docs/what-are-virtual-clusters) | [Demo](https://www.youtube.com/watch?v=FYqKQIthH6s&t=2135s)
 * [k9s - Kubernetes CLI To Manage Your Clusters In Style!](https://k9scli.io)
 
 </div>
