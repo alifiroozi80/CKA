@@ -1261,7 +1261,7 @@ doesn't care!
     2) Pods on **same Node** can **communicate** with **that IP address**
     3) Pods on different Node can **communicate** with **that IP address with out NAT** (Network Address translation)
 
-<img alt="Pod to Pod" src="images/cni-4.png" />
+<img alt="Pod to Pod" src="images/cni-4.png">
 
 ### A more scalable solution-`Agents on Node`
 
@@ -1271,7 +1271,7 @@ So how to manage thousands of Nodes? we need a more `Automated` & `Scalable` sol
 
 * A Weave network consists of `peers` - Weave Net routers reside on the Nodes
 * They form a group and can directly talk to each other
-  <img alt="Pod to Pod" src="images/cni-5.png" />
+  <img alt="Pod to Pod" src="images/cni-5.png" alt="CNI Pic-5">
 
 </div>
 
@@ -1483,7 +1483,7 @@ Now let's deploy a nginx Deployment with 2 Pods and a test Service for it
 * Kube Proxy forwards the request
 * Responsible for **maintaining list of Service IPs and corresponding Pod IPs**
 
-<img src="images/kube-proxy-2.png">
+<img src="images/kube-proxy-2.png" alt="Kube-Proxy Pic-2">
 
 </div>
 
@@ -1555,7 +1555,7 @@ Then we want to curl the nginx app via its service:
 
 <div id="DNS-in-kubernetes">
 
-<img src="images/core-dns-1.png" />
+<img src="images/core-dns-1.png" alt="CoreDNS Pic-1">
 
 DNS Server is:
 
@@ -1572,7 +1572,7 @@ DNS Server is:
     kubectl logs -n kube-system -l k8s-app=kube-dns
     ```
 
-<img src="images/core-dns-2.png" />
+<img src="images/core-dns-2.png"  alt="CoreDNS Pic-2">
 
 ```bash
 kubectl run -it test-nginx-svc --image=nginx -- bash
@@ -1600,7 +1600,7 @@ options ndots:5
 
 <div id="Service-Fully-Qualified-Domain-Name">
 
-<img src="images/core-dns-3.png" />
+<img src="images/core-dns-3.png" alt="CoreDNS Pic-3">
 
 * `<servicename>.<namespace>.svc.cluster.local`
 * We don't have to use the fully qualified name
@@ -1884,7 +1884,7 @@ NodePort Service Accessibility:
 * On IP address of Node + The NodePort
 * NodePort accessible from outside the cluster
 
-<img src="images/nodeport-accessibility.png" />
+<img src="images/nodeport-accessibility.png" alt="Node Port Accessibility">
 
 </div> <!-- What is NodePort? How does it work?-->
 </div> <!-- NodePort-->
@@ -1939,7 +1939,7 @@ How Loadbalancer Type works:
 * Accessible at own IP address & port
 * Loadbalancer is not created inside the cluster
 
-<img src="images/loadbalancer-1.png" />
+<img src="images/loadbalancer-1.png" alt="Load Balancer Pic-1">
 
 1) Who is responsible for creating the loadbalancer?
 
@@ -1976,7 +1976,7 @@ Some notes:
    the `Worker Nodes` (`Only` the Worker Nodes NOT master) and then Register
 8) After a while your Loadbalancer will go from `Provisioning` to `Active` state
 
-<img src="images/loadbalancer-2.png" />
+<img src="images/loadbalancer-2.png" alt="Load Balancer Pic-2">
 
 </div> <!-- Create Loadbalancer-->
 
@@ -2021,7 +2021,7 @@ Now if you paste the Loadbalancer Domain Name, you should still see the Welcome 
 * Configure secure connection
 * Loadbalancing to different services
 
-<img src="images/ingress-1.png" />
+<img src="images/ingress-1.png" alt="Ingress Pic-1">
 
 * **Ingress**
 * A K8s component
@@ -2031,7 +2031,7 @@ Now if you paste the Loadbalancer Domain Name, you should still see the Welcome 
 * We need to `expose` it either as NodePort or Loadbalancer
 * 1 NodePort or Loadbalancer, which is single entrypoint
 
-<img src="images/ingress-2.png" />
+<img src="images/ingress-2.png" alt="Ingress Pic-2">
 
 </div> <!-- Why Ingress?-->
 
@@ -2042,7 +2042,7 @@ Now if you paste the Loadbalancer Domain Name, you should still see the Welcome 
 * Valid domain address
 * Map domain name to `the IP address`, which is the `entrypoint`
 
-<img src="images/ingress-3.png" />
+<img src="images/ingress-3.png" alt="Ingress Pic-3">
 
 </div> <!-- How Ingress works? -->
 
@@ -2069,7 +2069,7 @@ Now if you paste the Loadbalancer Domain Name, you should still see the Welcome 
     * own virtualized Loadbalancer
     * Advantage: You don't have to implement Loadbalancer yourself
 
-<img src="images/ingress-5.png">
+<img src="images/ingress-5.png" alt="Ingress Pic-5">
 
 2) Bare Metal:
     * You need to configure some kind of entrypoint
@@ -2079,7 +2079,7 @@ Now if you paste the Loadbalancer Domain Name, you should still see the Welcome 
     * Entrypoint to cluster
     * `No server in K8s cluster is accessible from outside!`
 
-<img src="images/ingress-4.png">
+<img src="images/ingress-4.png" alt="Ingress Pic-4">
 
 </div> <!-- How to configure Ingress? -->
 
@@ -2089,11 +2089,11 @@ Now if you paste the Loadbalancer Domain Name, you should still see the Welcome 
 
 * Multiple paths for `same host`
 
-<img src="images/ingress-6.png" />
+<img src="images/ingress-6.png" alt="Ingress Pic-6">
 
 * Multiple `sub-domains` or `domains`
 
-<img src="images/ingress-7.png" />
+<img src="images/ingress-7.png" alt="Ingress Pic-7">
 
 </div> <!-- More Use Cases -->
 
@@ -2101,7 +2101,7 @@ Now if you paste the Loadbalancer Domain Name, you should still see the Welcome 
 
 <div id="Configuring-TLS-Certificate">
 
-<img src="images/ingress-8.png" />
+<img src="images/ingress-8.png" alt="Ingress Pic-8">
 
 * **Important Notes**:
     1) Data Keys need to be `tls.crt` and `tls.key`
@@ -2136,7 +2136,7 @@ kubectl get svc # Check for 2 ingress services (ClusterIP & Loadbalancer)
 
 Now you may wonder why a Loadbalancer Service type?
 
-<img src="images/ingress-9.png" />
+<img src="images/ingress-9.png" alt="Ingress Pic-9">
 
 Now we should Configure a LB again... <a href="#Create-Loadbalancer">Check this section</a>
 
@@ -2155,7 +2155,7 @@ So as a next step: Configure Ingress Controller to route the traffic
 * K8s way to configure routing logic
 * `Our` routing logic
 
-<img src="images/ingress-10.png">
+<img src="images/ingress-10.png" alt="Ingress Pic-10">
 
 1) Change the `ingress-service` back to ClusterIP Service
 
@@ -2344,27 +2344,26 @@ In Production, you should have 1 replica per Worker Node
 Lecture Overview
 
 * How `Authentication` and `Authorization` works in Kubernetes
-* How to configure users, groups and their permissions
-* Authorization with `Role Based Access Contrl (RBAC)`
-* Which K8s resources to to use to define permissions in the cluster
+* How to configure users, groups, and their permissions
+* Authorization with `Role Based Access Control (RBAC)`.
+* Which K8s resources to use to define permissions in the cluster
 
 ### Role & Role Binding
 
 <div id="Role-Role-Binding">
 
 * **Role:**
-    * With `Role` component you can define namespaced permissions
-    * Bound to a `specific Namespace`
-    * `What resources` in that namespace you can access? (`Pod`, `Deployment`, `Service`, ...)
-    * `What action` you can do `with this resource`? (`"list"`, `"get"` `"update"`, `"delete"`, ...)
+    * With the **Role** component, you can define namespaced permissions
+    * Bound to a **specific Namespace**
+    * **What resources** in that namespace can you access? (`Pod`, `Deployment`, `Service`, ...)
+    * **What action** can you do with this resource? (`"list"`, `"get"` `"update"`, `"delete"`, ...)
     * Define Resources and Access Permissions
         * [ ] No information on WHO gets these permissions
-    * `How to attach Role Definition to a person or team?`
-
+    * **How to attach Role Definition to a person or team?**
 
 * **RoleBinding:**
     * Link ("Bind") a Role to a User or Group
-    * All members of Group get permissions defined in the Role
+    * All members of the Group get permissions defined in the Role
 
 </div> <!-- Role & Role Binding -->
 
@@ -2379,11 +2378,11 @@ How about K8s Admins?
 
 
 * **ClusterRole:**
-* Defines resources and permissions `cluster wide`
+    * Defines resources and permissions `**cluster wide**
 
 
 * **ClusterRoleBinding:**
-* Link ("Bind") an ClusterRole to a User or Group
+    * Link ("Bind") a ClusterRole to a User or Group
 
 </div> <!-- Cluster Role & ClusterRole Binding -->
 
@@ -2393,9 +2392,9 @@ How about K8s Admins?
 
 How do we create Users and Groups?
 
-* Kubernetes `doesn't manage Users natively`
-* Admins can choose from `different authentication strategies`
-* `No Kubernetes Objects` exist for representing normal user accounts
+* Kubernetes **doesn't manage Users natively**
+* Admins can choose from **different authentication strategies**
+* **No Kubernetes Objects** exist for representing regular user accounts
 
 #### External Source for Authentication
 
@@ -2411,8 +2410,7 @@ How do we create Users and Groups?
 
 ---
 
-* example for Tokens (users.csv):
-
+* Example for Tokens (users.csv):
   ```text
   aWpoZGZzaXNoaWZsa2pldWwK, user_1, u1001,group1
   aWpoZGZzaXNoaWZoc2Roc2Ru, user_2, u1002,group2
@@ -2420,7 +2418,6 @@ How do we create Users and Groups?
   ```
 
 * Pass token file via `--token-auth-file=/users.csv` command option
-
   ```shell
   kube-apiserver --token-auth-file=/users.csv [other options]
   ```
@@ -2429,9 +2426,9 @@ How do we create Users and Groups?
 Admins:
 
 1) Manually create certificates for users
-2) Or configure LDAP as authentication source
+2) Or configure LDAP as the authentication source
 
-<img src="images/rbac-1.png" />
+<img src="images/rbac-1.png" alt="RBAC Pic-1">
 
 </div> <!-- External Source for Authentication -->
 </div> <!-- User & Groups in Kubernetes -->
@@ -2440,23 +2437,23 @@ Admins:
 
 <div id="Service-Accounts">
 
-<img src="images/rbac-2.png" />
+<img src="images/rbac-2.png" alt="RBAC Pic-2">
 
 How about Authorization for Applications
 
-* Applications are `inside` the cluster and `outside` the cluster
-* e.g:
+* Applications are **inside** the cluster and **outside** the cluster
+* e.g.:
 
-    1) Monitoring Apps, wic collects metrics from other apps within cluster (Prometheus)
+    1) Monitoring Apps, which collects metrics from other apps within the cluster (Prometheus)
     2) CI/CD Server deploying apps inside the cluster (Jenkins)
     3) Infrastructure Provisioning Tools configuring the cluster (Terraform)
 
-* We also want Apps to have `only the permission it needs!`
+* We also want Apps to have **only the permission it needs!**
 
 
-* **ServiceAccount**: K8s Component that `represent an Application as User`
-    * Link ServiceAccount to `Role` with RoleBinding (e.g. CI/CD example)
-    * Link ServiceAccount to `ClusterRole` with ClusterRoleBinding (e.g. Monitoring Apps)
+* **ServiceAccount**: K8s Component that **represent an Application as User**
+    * Link ServiceAccount to `Role` with RoleBinding (e.g., CI/CD example)
+    * Link ServiceAccount to `ClusterRole` with ClusterRoleBinding (e.g., Monitoring Apps)
 
 </div> <!-- Service Accounts -->
 
@@ -2464,7 +2461,7 @@ How about Authorization for Applications
 
 <div id="Example-Configuration-Files-in-rbac">
 
-* **`Role` Configuration Fil**e
+* **`Role` Configuration File**
 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -2493,11 +2490,11 @@ rules:
       - "myapp"
 ```
 
-* `apigroups`: "" Indicates the core API group
-* `resources`: K8s components like Pods, Deployments etc.
+* `apigroups`: `""` Indicates the **core API group**
+* `resources`: K8s components like Pods, Deployments, etc.
 * `verbs`:
-* [X] The actions on a resource
-* [X] `get`, `list` (read-only) or `create`, `update` (read-write)
+    * [X] The actions on a resource
+    * [X] `get`, `list` (read-only) or `create`, `update` (read-write)
 * `resourceNames`: Define access to only certain pods in that namespace
 
 ---
@@ -2519,7 +2516,7 @@ roleRef:
   name: developer
 ```
 
-<img src="images/rbac-3.png">
+<img src="images/rbac-3.png" alt="RBAC Pic-3">
 
 ---
 
@@ -2543,8 +2540,8 @@ rules:
       - update
 ```
 
-1) Define access for `cluster-wide resources`
-2) Define access for `namespced resources`
+1) Define access for **cluster-wide resources**
+2) Define access for **namespace resources**
 
 </div> <!-- Example Configuration Files -->
 
@@ -2552,18 +2549,16 @@ rules:
 
 <div id="Creating-Viewing-RBAC-Resources">
 
-* Create Role, ClusterRole etc. just like any other Kubernetes component
+* Create `Role`, `ClusterRole`, etc. just like any other Kubernetes component
+    ```shell
+    kubectl apply -f <ROLE-MANIFEST.YAML>
+    ```
 
-```shell
-kubectl apply -f <ROLE-MANIFEST.YAML>
-```
-
-* View Components with get and describe command
-
-```shell
-kubectl get roles
-kubectl describe role <NAME>
-```
+* View Components with `get` and `describe` command
+    ```shell
+    kubectl get roles
+    kubectl describe role <NAME>
+    ```
 
 </div> <!-- Creating & Viewing RBAC Resources -->
 
@@ -2571,14 +2566,14 @@ kubectl describe role <NAME>
 
 <div id="Checking-API-Access-RBAC">
 
-* Kubectl provides a `auth can-i` subcommand
-* To quickly check if current user can perform a given action
+* Kubectl provides an `auth can-i` subcommand
+* To quickly check if the current user can perform a given action
 
 ```shell
 kubectl auth can-i create deployments --namespace dev
 ```
 
-* Admins can also check permissions of other users
+* Admins can also check the permissions of other users
 
 </div> <!-- Checking API Access -->
 
@@ -2587,15 +2582,16 @@ kubectl auth can-i create deployments --namespace dev
 <div id="Wrap-UP-RBAC-1">
 
 **Layers of Security**
-Lets say our Jenkins application from outside the cluster wants to connect to the cluster:
+
+Let's say our Jenkins application from outside the cluster wants to connect to the cluster:
 
 1) API Server checks if Jenkins User is authenticated
-2) Is Jenkins `allowed` to `connect to the cluster at all?`
-3) You can enable multi authentication methods at once
-4) RBAC is one of multiple Authorization Modes
+2) Is Jenkins **allowed** to **connect to the cluster at all?**
+3) You can enable multi-authentication methods at once
+4) RBAC is one of the multiple Authorization Modes
 5) With RBAC: Role, ClusterRole, and Bindings are checked
 
-<img src="images/rbac-4.png">
+<img src="images/rbac-4.png" alt="RBAC Pic-4">
 
 </div> <!-- Wrap UP -->
 
@@ -2618,10 +2614,9 @@ Lets say our Jenkins application from outside the cluster wants to connect to th
 Where to enable the authorization mode?
 
 * In the `API Server` configuration
-
-```shell
-sudo vim /etc/kubernetes/manifests/kube-apiserver.yaml
-```
+    ```shell
+    sudo vim /etc/kubernetes/manifests/kube-apiserver.yaml
+    ```
 
 and check the `- --authorization-mode=Node,RBAC` under the command section:
 
@@ -2641,18 +2636,18 @@ spec:
 
 <div id="RBAC-Certificates-in-Kubernetes">
 
-We already saw that when we initialized our cluster, kubeadm generated certificates automatically and store:
+We already saw that when we initialized our cluster, kubeadm generated certificates automatically and stored them:
 
 * `Server Certificate` in `/etc/kubernetes/pki` (`apiserver.crt` & `apiserver.key`)
 * `ETCD Certificate` in `/etc/kubernetes/pki/etcd`
 
-Kubeadm init also generated `Client Certificate` for other services that talk to the API Server.
+Kubeadm inits also generated a `Client Certificate` for other services that talk to the API Server.
 
-How signed those Certificate?
+How signed those Certificates?
 
 * Kubeadm generated a CA for K8s cluster
 * All clients have a copy of k8s CA
-  <img src="images/rbac-5.png">
+  <img src="images/rbac-5.png" alt="RBAC PIC-5">
 * [X] K8s CA's are trusted within K8s by all components, who have a copy of the CA
 
 </div> <!-- Certificates in Kubernetes -->
@@ -2661,9 +2656,10 @@ How signed those Certificate?
 
 <div id="RBAC-Certificates-API"> 
 
-As we said before, K8s allows you to configure these external sources;
+As we said before, K8s allow you to configure these external sources;
 
-But `you have to mange them yourself`, in this section, we talk about Configure User Authentication via `Certificates`
+But **you have to manage them yourself** in this section, we talk about Configure User Authentication
+via `Certificates.`
 
 ### `Process` of Certificate Signing
 
@@ -2671,11 +2667,11 @@ But `you have to mange them yourself`, in this section, we talk about Configure 
 
 Process of signing a `Client Certificate`:
 
-1) Create Ket-Pair
+1) Create Key-Pair
 2) Generate `Certificate Signing Request (CSR)`
 3) Send CSR using K8s Certificate API
 4) K8s signs certificate for you (`Pending` State)
-5) K8s admin approves certificate
+5) K8s admin approves the certificate
 
 </div> <!-- Process of Certificate Signing -->
 </div> <!-- Certificates API -->
@@ -2691,11 +2687,11 @@ In this overview:
     * Create `CertificateSigningRequest` for key
     * Approve `CertificateSigningRequest`
     * Get signed certificate
-    * Give permission to create, delete, update K8s resources
+    * Permit to create, delete, and update K8s resources
     * Validate user permission
 * Service Account
     * Create a Service Account for Jenkins
-    * Give Permissions to create, delete, update K8s resources
+    * Give Permissions to create, delete, and update K8s resources
 
 ## Create User Account
 
@@ -2775,11 +2771,11 @@ kubectl \
 get pod
 ```
 
-However, it will fail after executing because we already have `config` file in `~/.kube` folder...
+However, it will fail after executing because we already have a `config` file in the `~/.kube` folder...
 
-move the `~/.kube/config` file somewhere else and then execute the command again...
+Move the `~/.kube/config` file somewhere else and execute the command again...
 
-This time it will execute correctly but shows a `Forbidden` message, since the new user doesn't have any Role. (
+This time it will execute correctly but shows a `Forbidden` message since the new user doesn't have any Role. (
 Authenticated, but no permissions yet!)
 
 ---
@@ -2791,14 +2787,15 @@ Authenticated, but no permissions yet!)
   cp config dev-tom.conf
   ```
 * then open the file and change all the `kubernetes-admin` to `dev-tom`
-* Then under the `user` section, you have two keys: `client-certificate-data` & `client-key-data` that we have to change
+* Then, under the `user` section, you have two keys: `client-certificate-data` & `client-key-data` that we have to
+  change
   & config, for that, we have two options (We'll see them both):
     1) Reference Files
     2) Include base64-encoded content
 
 #### 1) Reference Files:
 
-change the keys like so:
+Change the keys like so:
 
 ```yaml
 # [ ... ]
@@ -2815,18 +2812,18 @@ Now the kubectl works fine: `kubectl --kubeconfig dev-tom.conf get pod`
 
 #### 2) Include base64-encoded content
 
-But isn't it better if we give Tom only 1 file?!
+But isn't it better if we give Tom only one file?!
 
-* encode dev-tom.crt
+* encode `dev-tom.crt`
   ```shell
   base64 dev-tom.crt | tr -d "\n"
   ```
-* encode dev-tom.key
+* encode `dev-tom.key`
   ```shell
   base64 dev-tom.key | tr -d "\n"
   ```
 
-* Change the dev-tom.conf like so:
+* Change the `dev-tom.conf` like so:
   ```yaml
   # [...]
   users:
@@ -2836,10 +2833,10 @@ But isn't it better if we give Tom only 1 file?!
         client-key-data: BASE64 VALUE OF THE dev-tom.key
   ```
 
-Now everything is working like a charm and you only have to give `dev-tom.conf` to the Tom.
+Now everything is working like a charm, and you only have to give `dev-tom.conf` to Tom.
 
-Alternatively you can rename the `dev-tom.conf` to `config` and place it to the `~/.kube` folder and using `kubectl`
-command like before (`kubectl get pod`)
+Alternatively, you can rename the `dev-tom.conf` to `config` and place it in the `~/.kube` folder using `kubectl`
+command line before (`kubectl get pod`)
 
 </div> <!-- Connect to K8s Cluster -->
 
@@ -2848,12 +2845,12 @@ command like before (`kubectl get pod`)
 <div id="DEMO-Give-User-Permission">
 
 * **Recap**
-    * User created in cluster
+    * User created in the cluster
     * Certificate signed by K8s CA
     * We have a valid Kubeconfig
 
-* But we don't have permissions to do anything! in this section we want to Give permissions to CRUD common resources in
-  `all namespaces`. so, in this section we:
+* But we don't have permissions to do anything! in this section, we want to Give permissions to CRUD common resources in
+  `all namespaces`. So, in this section we:
     1) Create `ClusterRole`
     2) Create `ClusterRoleBinding`
 
@@ -2952,7 +2949,7 @@ command like before (`kubectl get pod`)
 
 <div id="Checking API Access-RBAC">
 
-* And now at this point, we can see all the Pods etc. but NOT node for example...
+* And now, at this point, we can see all the Pods, but NOT node, for example...
   ```shell
   kubectl get pods # Return all the pods
   ```
@@ -2978,10 +2975,10 @@ command like before (`kubectl get pod`)
 
 <div id="DEMO-Service-Account-permissions">
 
-K8s distinguishes between the concept of `user account` and a `service account`.
+K8s distinguishes between a **user account** and a **service account**.
 
-* Service Accounts provide an `identity for processes` that run in a Pod
-* Assign `permissions` to that Service Account via `Role` and `ClusterRole` (`Binding`)
+* Service Accounts provide an **identity for processes** that run in a Pod
+* Assign **permissions** to that Service Account via `Role` and `ClusterRole` (`Binding`)
 
 ### Create `ServiceAccount`
 
@@ -2998,13 +2995,13 @@ K8s distinguishes between the concept of `user account` and a `service account`.
     name: jenkins
   ```
 
-* Apply this file. Based on your kubernetes version you should consider:
+* Apply this file. Based on your Kubernetes version, you should consider:
 
-1) If your kubernetes version is before `1.24`, the ServiceAccount will automatically create a Token (`Secret`) for
+1) If your Kubernetes version is before `1.24`, the ServiceAccount will automatically create a Token (`Secret`) for
    you...
-   this means after running `kubectl describe serviceaccount jenkins` you should see a `Token`...
+   this means after running `kubectl describe serviceaccount jenkins`. You should see a **Token**...
 
-2) But if your kubernetes version is equal greater than `1.24`, you should do some extra steps:
+2) But if your Kubernetes version is equal greater than `1.24`, you should do some extra steps:
 
 * create a `Secret` manually for your ServiceAccount:
   ```yaml
@@ -3016,7 +3013,7 @@ K8s distinguishes between the concept of `user account` and a `service account`.
     annotations:
       kubernetes.io/service-account.name: "jenkins"
   ```
-* Apply this secret in the same namespace that you applied the `jenkins-sa.yaml` and you are good to go...
+* Apply this secret in the same namespace that you applied the `jenkins-sa.yaml` and, you are good to go...
 
 * Sources
     * [blog](https://itnext.io/big-change-in-k8s-1-24-about-serviceaccounts-and-their-secrets-4b909a4af4e0)
@@ -3024,8 +3021,8 @@ K8s distinguishes between the concept of `user account` and a `service account`.
     * [kubernetes github](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.24.md#urgent-upgrade-notes)
 
 
-* [X] NOTE: in the rest of this tutorial we are going with option number 2. so, I assume your kubernetes version is
-  greater or equal to `1.24.X`, if not, it's OK! you can still follow along...
+* [X] NOTE: in the rest of this tutorial, we are going with option number 2. so I assume your Kubernetes version is
+  greater or equal to `1.24.X`. If not, it's OK! You can still follow along.
 
 </div> <!-- Create ServiceAccount -->
 
@@ -3085,13 +3082,14 @@ At this point you can see everything is correct, but still we don't have permiss
 
 <div id="Give -Permission-Role-RoleBinding-RBAC-SA">
 
-At this point, jenkins Authenticated, But, no permissions...
+At this point, Jenkins is Authenticated, But no permissions.
 
-In this section we give permissions only to specific namespace, we use `Role` for namespaced permissions.
+In this section, we give permissions only to a specific namespace. We use `Role` for namespaced permissions.
 
 * [X] Security Best Practice: Give the least privilege...
 
 ---
+
 **Create Role**
 
 * Create a role (`cicd-role.yaml`)
@@ -3126,6 +3124,7 @@ In this section we give permissions only to specific namespace, we use `Role` fo
 Apply this file.
 
 ---
+
 **Create RoleBinding**
 
 * Create a RoleBinding (`cicd-binding.yaml`)
@@ -3174,7 +3173,7 @@ Apply this file, then check the jenkins permission.
   kubectl get POD_NAME
   ```
 
-* Is Pod registered with service?
+* Is Pod registered with Service?
 * Is Service forwarding the request?
   ```shell
   kubectl get ep
@@ -3502,7 +3501,7 @@ etc. or Scripts that runs "before" each app start-up, or Preparing environment b
         command: ['sh', '-c', 'COMMAND']
   ```
 
-<img src="images/init-container.png" />
+<img src="images/init-container.png" alt="Init Containers">
 
 </div> <!-- Init and Sidecar Containers -->
 
@@ -6767,7 +6766,8 @@ But remember :You have to clean up a little bit of this file, e.g. `creationTime
 
 * [Open Source Curriculum for CNCF Certification Courses](https://github.com/cncf/curriculum)
 * [4 Most Important Kubernetes Interview Questions](https://www.linkedin.com/pulse/4-most-important-kubernetes-interview-questions-raju-kumar-)
-* VCluster | [Website](https://www.vcluster.com) | [Docs](https://www.vcluster.com/docs/what-are-virtual-clusters) | [Demo](https://www.youtube.com/watch?v=FYqKQIthH6s&t=2135s)
+* VCluster | [Website](https://www.vcluster.com) | [Docs](https://www.vcluster.com/docs/what-are-virtual-clusters)
+  | [Demo](https://www.youtube.com/watch?v=FYqKQIthH6s&t=2135s)
 * [k9s - Kubernetes CLI To Manage Your Clusters In Style!](https://k9scli.io)
 
 </div>
