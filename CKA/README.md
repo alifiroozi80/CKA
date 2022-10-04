@@ -2721,7 +2721,7 @@ In this overview:
     usages:
     - client auth
   ```
-    * [X] `dev-tom.csr | base64 | tr -d "\n"`
+    * [X] `cat dev-tom.csr | base64 | tr -d "\n"`
     * [Docs](https://kubernetes.io/docs/reference/access-authn-authz/certificate-signing-requests/#create-certificatesigningrequest)
 
 * Now apply it with `kubectl apply -f dev-tom-csr.yaml` and check it:
