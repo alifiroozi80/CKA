@@ -3168,7 +3168,7 @@ Apply this file, then check the jenkins permission.
 
 <div id="Troubleshoot-Applications-Troubleshooting">
 
-* Is Pod running?
+* Is a Pod running?
   ```shell
   kubectl get POD_NAME
   ```
@@ -3200,13 +3200,13 @@ Apply this file, then check the jenkins permission.
   kubectl describe pod POD_NAME
   ```
 
-These were just Simple path of troubleshooting Pod and Application
+These were just Simple paths of troubleshooting Pod and Application
 
 </div> <!-- Troubleshoot Applications -->
 
 ## Debug with temporary Pods -- Busy-Box
 
-Pod Network is different from Cluster Node Network.
+Pod Network is different from a Cluster Node Network.
 
 * Execute troubleshooting commands from `within` a Pod
 * [X] Common Docker images with Unix utilities...
@@ -3218,19 +3218,19 @@ Pod Network is different from Cluster Node Network.
   kubectl run debug-pod --image=busybox
   ```
 
-After running this command, soon you `Running` to `Completed` status... and you can not execute
-command in it `kubectl exec -it debug-pod -- sh`... But why is that?!
+After running this command, your Pod status will change from `Running` to `Completed` status..., and you can not execute
+the `kubectl exec -it debug-pod -- sh` in it ... But why is that?!
 
 ---
 
 * Containers execute a specific task
-    * Run mysql database...
-    * Start web application...
+    * Run MySQL database...
+    * Start web application
     * Synchronize data...
-* Container exists once task is done
-* **Container lives as long as process inside lives**
+* Container exists once the task is done
+* **Container lives as long as a process inside lives**
 
-Where do you see what process a container start?
+Where do you see what process a container starts?
 
 * Dockerfile --> CMD command
     * specifies the instruction that is to be executed when a Docker container starts
@@ -3238,13 +3238,13 @@ Where do you see what process a container start?
 * When we look at [busybox Dockerfile](https://github.com/docker-library/busybox/blob/master/stable/glibc/Dockerfile)
   we see that the default CMD is `sh`, sp if no terminal is attached, it exits...
 
-So, How tp keep busybox container alive? 2 Options:
+So, How to keep the busybox container alive? Here are 2 Options:
 
 1) Start busybox with interactive mode (`-it`)
     ```shell
     kubectl run debug-pod --image=busybox -it
     ```
-    * Now the busybox Pod, will always be in `Running` state. even if we exit, we can
+    * Now, the busybox Pod will always be in the `Running` state. even if we exit, we can
       reattach to the container via `kubectl exec -it debug-pod -- sh`
 2) Define `command` and `args` in Configuration File...
 
@@ -3258,14 +3258,14 @@ So, How tp keep busybox container alive? 2 Options:
 * Not overwrite, but pass parameters?
     * like `sh my-script.sh`
     * Not possible with `CMD` instruction
-    * `Entrypoint` instruction allows to append other command
+    * `Entrypoint` instruction allows appending other commands
 
 ---
 
 * CMD
     * Main purpose of CMD is to provide defaults for an executing container.
 * ENTRYPOINT
-    * Preferred for executable that should always run.
+    * Preferred for the executable that should always run.
     * allow users to append other commands.
 * CMD & ENTRYPOINT
     * ENTRYPOINT = defines the process that starts in the container.
@@ -3295,16 +3295,16 @@ How does this map to Kubernetes?
 
 ---
 
-Execute commands in Pod environment without entering the Pod?
+Execute commands in the Pod environment without entering the Pod.
 
 ```shell
 kubectl exec -it busybox-pod -- sh -c "while true; do echo hello; sleep2; done"
 ```
 
 * BASH or SHELL?
-    * bash is superset of shell
+    * bash is a superset of shell
     * bash has more functionality & more elegant syntax
-    * [X] Some images doesn't have bash available
+    * [X] Some images don't have bash available
 
 <div id="Commands-Args-Troubleshooting"></div> <!-- Commands & Args -->
 <div id="Debug-with-temporary-Pods-Busy-Box"></div> <!-- Debug with temporary Pods -- Busy-Box -->
@@ -3319,7 +3319,7 @@ kubectl exec -it busybox-pod -- sh -c "while true; do echo hello; sleep2; done"
 
 ---
 
-* Get a massive list of attributes about our nodes
+* Get a massive list of attributes about our nodes:
   ```shell
   kubectl get no -o json
   ```
