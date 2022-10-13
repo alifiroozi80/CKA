@@ -542,13 +542,13 @@
 
 * Open source container `orchestration tool`
 * Developed by Google
-* Helps manage containerize applications on `different deployment environments`
+* Helps to manage containerize applications on `different deployment environments`
 
 ## What Problems Kubernetes solves?
 
 <div id="What-is-Kubernetes-What-Problems-Kubernetes-solves">
 
-Need for container orchestartion tool
+Need for a container orchestration tool
 
 * Trend from **Monolith** to **Microservice**
 * Increase usage of containers
@@ -556,7 +556,7 @@ Need for container orchestartion tool
 
 </div> <!-- What Problems Kubernetes solves -->
 
-## What features orchestration tools offer?
+## What features do orchestration tools offer?
 
 <div id="What-is-Kubernetes-What-features-orchestration-tools-offer">
 
@@ -582,7 +582,7 @@ Worker Machine in K8s Cluster
         * Kubelet interacts with both the container and node
         * Kubelet starts the Pod with a container inside
     * Kube Proxy
-        * Kube Proxy forward the requests
+        * Kube Proxy forwards the requests
 
 ---
 
@@ -605,7 +605,7 @@ So, how do you interact with this cluster?
 * 4 processes runs on every control plane node
     * Api Server
         * Cluster gateway
-        * Acts as gatekeeper for authentication!
+        * Acts as the gatekeeper for authentication!
         * [X] Only 1 entrypoint into the cluster
         * Api Server is **load balanced**
     * Scheduler
@@ -630,7 +630,7 @@ So, how do you interact with this cluster?
 
 * Very powerful way that **enables interaction with the cluster**
 * **Limitation** when using those commands
-* Best practice: USe `K8s Configuration file`
+* Best practice: Use `K8s Configuration file`
 
 </div> <!-- Kubernetes CLI -->
 
@@ -642,7 +642,7 @@ So, how do you interact with this cluster?
 * `Apply` configuration file with `kubectl`
     * **Multiple K8s components in 1 file** and apply them with 1 apply command
 * `Update` K8s components:
-    * Edit config file and apply it again
+    * Edit the config file and apply it again
 * `Delete` K8s components with config file
 
 </div> <!-- K8s Configuration file -->
@@ -655,9 +655,9 @@ So, how do you interact with this cluster?
     * Telling Kubernetes **WHAT to do**
     * We operate directly on live objects
 * Declarative
-    * Telling Kubernetes **WHAT we want as end result** in the config file
+    * Telling Kubernetes **WHAT we want as the end result** in the config file
     * We operate on object configuration files
-    * We don't define the oprations, these are **automatically detect by kubectl**
+    * We don't define the operations, these are **automatically detected by kubectl**
 
 ---
 
@@ -671,7 +671,7 @@ Which one to use?
     * History of configurations
     * Infrastructure as Code in Git Repo
     * Collaboration and review processes possible
-    * More trasparent
+    * More transparent
 
 </div> <!-- Imperative vs Declarative -->
 
@@ -699,14 +699,14 @@ Which one to use?
 
 * Master components deployed as Pods
 * Pods are deployed by master components
-    * Send request to `API Server`
+    * Send a request to `API Server`
     * `Scheduler` decides where to place Pod
     * Pod data stored in `etcd` store
 * How to schedule the Master Pods then? (The Egg and Chicken Problem!)
 
 ---
 
-Statis Pods
+Static Pods
 
 * Are managed directly by the kubelet daemon
 * Without control plane
@@ -714,7 +714,7 @@ Statis Pods
 ---
 
 * Regular Pod Scheduling
-    * `API Server` gets request
+    * `API Server` gets the request
     * `Scheduler`: which Node?
     * `Kubelet`: schedules Pod
 * Static Pod Scheduling
@@ -726,19 +726,19 @@ How does that work?
 
 * Kubelet **watches a specific location** on the Node it is running
     * `/etc/kubernetes/manifests`
-* Schedules Pod, when it fineds a "Pod" manifest
+* Schedules Pod, when it finds a "Pod" manifest
 
 ---
 
 * Why is it called **static** Pod?
 * How is it **different**?
 
-* Kubelet (NOT Controller Manager) watches static Pods and restarts them if they fails
+* Kubelet (NOT Controller Manager) watches static Pods and restarts them if they fail
 * Pod names are **suffixed with the node hostname**
 
 * First step when installing K8s cluster
     * Generate static Pods manifests
-    * Put those config files into correct folder
+    * Put those config files into the correct folder
 
 </div> <!-- Static Pods -->
 
@@ -746,22 +746,22 @@ How does that work?
 
 <div id="Kubernetes-Installation-Steps-Certificates">
 
-Everythingn needes a certificate...
+Everything needs a certificate...
 
-How it works?
+How does it work?
 
 * Generate self-signed CA certificate for Kubernetes (cluster root CA)
 * Sign all client and server certificates with it
 * Certificates are stored in: `/etc/kubernetes/pki`
-* Each component gets a certificate, **signed by same certificate authority**
+* Each component gets a certificate, **signed by the same certificate authority**
 * Proof that components identify and that its part of the same cluster
 
 ---
 
-1) Generate a **self-signed CA certificate** for whole Kubernetes cluster (`cluster root CA`)
+1) Generate a **self-signed CA certificate** for the whole Kubernetes cluster (`cluster root CA`)
 2) Sign all client and server certificates with it
     * `Server certificate` for the API server endpoint
-    * `Client certifictate` for scheduler and controller manager
+    * `Client certificate` for scheduler and controller manager
     * `Server certificate` for Etcd and Kubelet
     * `Client certificate` for API Server to talk to Kubelet and Etcd
     * `Client certificate` for Kubelet to authenticate to API Server
@@ -771,7 +771,7 @@ How it works?
 Public Key Infrastructure
 
 * Governs the issuance of certificates to:
-    * [X] Protect sensetive data
+    * [X] Protect sensitive data
     * [X] Provide unique digital identities for applications, users and devices
     * Secure end-to-end communication
 
@@ -783,12 +783,12 @@ Public Key Infrastructure
 
 For a K8s cluster, we need to do all the steps above + some other configuration details we need to provide
 
-But it is complex and time consuming, when doing manually
+But it is complex and time consuming, when doing it manually
 
 ---
 
 * Kubeadm
-    * Toolkit for bootstrapping a best-practises K8s cluster
+    * Toolkit for bootstrapping a best-practices K8s cluster
 
 * Providing fast paths for creating K8s cluster
 * Performs the actions necessary to get a minimum viable cluster
