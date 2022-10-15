@@ -1353,7 +1353,7 @@ We already installed:
     kubeadm token create --print-join-command
     ```
 
-paste the output of this command on `WSorker Node(s)`, note that you can use your this output as much as you want...
+Paste the output of this command on **Worker Node(s)**. Note that you can use this output as much as you want.
 
 ### Kubeadm join preflight
 
@@ -1376,9 +1376,9 @@ paste the output of this command on `WSorker Node(s)`, note that you can use you
 kubectl logs -n kube-system pod/weave-net-4xtwz -c weave
 ```
 
-As you can see, there was a connection error that says weave-nets can not reach each other...
-<br>
-It is because we need to open a port on each server for weave-nets...
+As you can see, there was a connection error that says weave-nets can not reach each other.
+
+We need to open a port on each server for `weave-nets`.
 
 * They listen on port `6783`
 
@@ -1404,7 +1404,7 @@ It is because we need to open a port on each server for weave-nets...
 
 <div id="Deploy-and-test-an-App">
 
-Now let's deploy a nginx Deployment with 2 Pods and a test Service for it
+Now let's deploy an Nginx Deployment with 2 Pods and a test Service for it
 
 * Nginx Deployment
     ```yaml
@@ -1481,7 +1481,7 @@ Now let's deploy a nginx Deployment with 2 Pods and a test Service for it
 <div id="How-requests-are-forwarded-from-Service-to-Pod">
 
 * Kube Proxy forwards the request
-* Responsible for **maintaining list of Service IPs and corresponding Pod IPs**
+* Responsible for **maintaining a list of Service IPs and corresponding Pod IPs**
 
 <img src="images/kube-proxy-2.png" alt="Kube-Proxy Pic-2">
 
@@ -1493,7 +1493,7 @@ Now let's deploy a nginx Deployment with 2 Pods and a test Service for it
 
 <div id="Scaling-Recording-kubectl-commands">
 
-We can scale our application Up/Down with editing the deployment.yaml file of that deployment. But for quickly testing
+We can scale our application Up/Down by editing the deployment.yaml file of that deployment. But for quickly testing
 something:
 
 ```shell
@@ -1524,7 +1524,7 @@ then you see it via:
 
 <div id="Connect-to-nginx-Pod">
 
-* We will `curl` to nginx Service from inside that Pod
+* We will `curl` to Nginx Service from inside that Pod
 * No need for a Deployment Configuration File
 
 ```shell
@@ -1560,12 +1560,12 @@ Then we want to curl the nginx app via its service:
 DNS Server is:
 
 * Nameserver in the K8s cluster
-* Manage list of Service Names and their IP addresses
-* All Pods points to this nameserver
+* Manage the list of Service Names and their IP addresses
+* All Pods point to this nameserver
 * DNS Server in Kubernetes is: `CoreDNS`
 * CoreDNS Pods run in `kube-system` namespace
 * `2 Replicas` in the kube-system namespace
-* In production cluster, `minimum of 2 replicas`!
+* In the production cluster, `minimum of 2 replicas`
 
 * Check logs of CoreDNS
     ```bash
@@ -1604,20 +1604,19 @@ options ndots:5
 
 * `<servicename>.<namespace>.svc.cluster.local`
 * We don't have to use the fully qualified name
-* By default, K8s `researchs only in the namespace` -->
-* `Same namespace`: Only name is sufficient
-* `Different namespaces`: You need to include that namespace
+* By default, K8s **research only in the namespace**
+    * `Same namespace`: Only the name is sufficient
+    * `Different namespaces`: You need to include that namespace
 
 </div> <!-- /Service - Fully Qualified Domain Name (FQDN) -->
-
 </div> <!-- /DNS in kubernetes -->
 
 ## Configure Service IP Address
 
 <div id="Configure-Service-IP-Address">
 
-1) As we already know, the Pod IP Addresses comes from `CNI`
-   2)` Api-server`, `Etcd`, `Kube-Proxy`, `Scheduler` and `controller-Manager` IP Addresses comes from `Server/Node` IP
+1) As we already know, the Pod IP Addresses come from `CNI`.
+2) `Api-server`, `Etcd`, `Kube-Proxy`, `Scheduler`, and `controller-Manager` IP Addresses come from `Server/Node` IP
    Address
 3) But how about the Services in K8s (`ClusterIP Type`)?
 
@@ -1694,17 +1693,16 @@ sudo vim /etc/kubernetes/manifests/kube-apiserver.yaml
     ```
 
 * Note that with option number `2`, you are going to
-  get `The connection to the server IP:6443 was refused - did you specify the right host or port?` error for a while, so
-  you have to wait a couple of minutes to `kube-apiserver` start again...
-* New CIDR block only applies for **newly** created Services, it means old Services still remains to the old CIDR block,
-  for
+  get the `The connection to the server IP:6443 was refused - did you specify the right host or port?` error for a
+  while, so
+  you have to wait a couple of minutes for `kube-apiserver` to start again...
+* New CIDR block only applies for **newly** created Services, which means old Services remain in the old CIDR block for
   testing:
+    ```shell
+    kubectl create service clusterip test-cidr-block --tcp 80:80
+    ```
 
-```shell
-kubectl create service clusterip test-cidr-block --tcp 80:80
-```
-
-Then Check the newly created Service...
+Then Check the newly created Service.
 
 </div> <!-- Change Default CIDR IP Range -->
 </div> <!-- Where is Service IP Range configured? -->
@@ -3385,7 +3383,7 @@ But this is too much! well, Kubectl uses `JSONPath` expressions to filter on spe
 
 <div id="Troubleshoot-Kubelet-issue">
 
-What if one of our worker nodes, get into `NotReady` status?! This problem is most commonly for `kubelet`, So,
+What if one of our worker nodes gets into `NotReady` status?! This problem is most commonly for `kubelet`, So,
 Check the Kubelet process.
 
 * Check kubelet status:
@@ -3418,7 +3416,7 @@ Check the Kubelet process.
   ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS
   ```
 
-* in the `ExecStart` section, check the the `/usr/bin/kubelet` path is exactly the same
+* in the `ExecStart` section, check the `/usr/bin/kubelet` path is the same
   path as you got from `which kubelet`
 * Reload the service
   ```shell
@@ -3436,7 +3434,7 @@ Check the Kubelet process.
 
 <div id="Troubleshoot-kubectl-connection-issue">
 
-If you can not connect to the cluster:, Check the `~/.kube/config` file:
+If you can not connect to the cluster: Check the `~/.kube/config` file:
 
 * Check if CA Certificate is correct?
   ```shell
@@ -3454,9 +3452,10 @@ If you can not connect to the cluster:, Check the `~/.kube/config` file:
 
 # Multiple Containers in a Pod
 
-Great! Now developer has access to the cluster and they know how to debug the cluster. but let's say they have some
-scripts that is NOT part of the main application that e.g. Update the cache, Doing authentication tasks, collects logs,
-etc. or Scripts that runs "before" each app start-up, or Preparing environment before app start-up...
+Great! Now developers have access to the cluster and know how to debug it. but let's say they have some
+scripts that are NOT part of the main application, e.g., Updating the cache, Doing authentication tasks, collecting
+logs,
+etc., or Scripts that run "before" each app start-up, or Preparing the environment before app start-up...
 
 * What is the best way to deploy these scripts?
 * How to do it in Kubernetes?
@@ -3468,9 +3467,9 @@ etc. or Scripts that runs "before" each app start-up, or Preparing environment b
 ### `Sidecar` Container
 
 * You can have multiple containers inside the Pod
-* Main ad Helper application
-* The container providing helper functionality is called sidecar container
-* Usually operate asynchronously
+* Main and Helper application
+* The container providing helper functionality is called the sidecar container
+* Usually operates asynchronously
 * [X] Can talk to each other using localhost (WithOUT DNS, IP, etc.)
 * [X] Can share data
 
@@ -3478,12 +3477,12 @@ etc. or Scripts that runs "before" each app start-up, or Preparing environment b
 
 ### `Init` Container
 
-* e.g:
-    * Set Environment Variables...
-    * System Checks...
-    * Wait for service to be available...
-* Run once in the beginning and exists
-* Main container starts afterwards
+* e.g.:
+    * Set Environment Variables
+    * System Checks
+    * Wait for service to be available
+* Run once in the beginning and exits
+* the Main container starts afterward
 * Init containers are used to `initialize` something inside your Pod
   ```yaml
   apiVersion: v1
@@ -3538,9 +3537,9 @@ etc. or Scripts that runs "before" each app start-up, or Preparing environment b
           image: busybox
           command: ['sh', '-c', "while true; do echo sync app logs; sleep 20; done"]                                                                                                         
   ```
-* Checks this things out:
-    * Posd and their creation
-    * the pod logs (when you have multiple containers you always need to specify the container!)
+* Checks these things out:
+    * Pods and their creation
+    * the pod logs (when you have multiple containers, you always need to specify the container!)
 
 </div> <!-- Add Sidecar Container -->
 
@@ -3548,7 +3547,7 @@ etc. or Scripts that runs "before" each app start-up, or Preparing environment b
 
 <div id="Add-Init-Container">
 
-* Adding a Init container to the previous file:
+* Adding an Init container to the previous file:
   ```yaml
   apiVersion: apps/v1
   kind: Deployment
@@ -3579,31 +3578,29 @@ etc. or Scripts that runs "before" each app start-up, or Preparing environment b
             image: busybox
             command: ['sh', '-c', "until nslookup mydb-service; do echo waiting for database; sleep 4; done"]
   ```
-    * Check that the pods remains at `Init` state...
-* Create a svc and see that the Pods state will change!
+    * Check that the pods remain at the `Init` state...
+* Create a service and see that the Pods state will change!
   ```shell
   kubectl create svc clusterip mydb-service --tcp=80:80
   ```
 
 </div> <!-- Add Init Container -->
 
-<li><a href="#"></a>
-
 ## Exposing Pod and Cluster Vars to Containers
 
 <div id="Exposing-Pod-and-Cluster-Vars-to-Containers">
 
-Lets say you need some data about Pod or K8s environment in your application to add Pod informnation as metada
-tp logs. such as e.g.
+Let's say you need some data about your application's Pod or K8s environment to add Pod information as metadata
+to logs. Such as e.g.
 
 * Pod IP
 * Pod Namespace
 * Service Account of Pod
 
-* But how to access these information?
+* But how to access this information?
     * [X] All Pod information can be made available in the config file
 
-* There are 2 ways to expose Pod fileds mto a running Container:
+* There are two ways to expose Pod fields to a running Container:
     1) Environment Variables
     2) Volume Files
 
@@ -3680,22 +3677,21 @@ Introduction to Kubernetes Volumes, How to `persist data` in K8s using volumes?
 
 <div id="Storage-Requirements">
 
-1) Storage that `doesn't depand on` the `pod lifecycle`.
-2) Storage must be `availabe on all nodes`.
-3) Storage needs to `survive` even if `cluster crashes`.
+1) Storage that **doesn't depend on** the **pod lifecycle**.
+2) Storage must be **availabe on all nodes**.
+3) Storage needs to **survive** even if **cluster crashes**.
 
 </div> <!-- Storage Requirements -->
-
 </div> <!-- The need for Volumes -->
 
 ## Persistent Volume
 
 <div id="Persistent-Volume">
 
-* Persistent Volume is more like `A cluster resource`. (like CPU & RAM)
-* Create via YAML file
+* Persistent Volume is more like **A cluster resource**. (like CPU & RAM)
+* Create via a YAML file
     * `kind: PersistentVolume`
-    * `spec`: e.g. how much storage?
+    * `spec`: e.g., how much storage?
 * Needs actual physical storage, like:
     * Cloud Storage
     * NFS server
@@ -3703,11 +3699,11 @@ Introduction to Kubernetes Volumes, How to `persist data` in K8s using volumes?
 
 ---
 
-Where does this storage come from, and who makes it available to the cluster?
+Where does this Storage come from, and who makes it available to the cluster?
 
-* What **Type of storage** do you need?
+* What **Type of Storage** do you need?
 * **You** need to **create and manage** them by yourself
-* [X] Think Storage as a **External plugin to your cluster**
+* [X] Think Storage as an **External plugin to your cluster**
 
 ### Persistent Volume YAML Example
 
@@ -3776,7 +3772,7 @@ Where does this storage come from, and who makes it available to the cluster?
                 operator: In
   ```
 
-* Depending on storage type, spec attributes differ
+* Depending on storage type, spec attributes are different.
 * [Complete list of storage backends supported by K8s](https://kubernetes.io/docs/concepts/storage/volumes/#volume-types)
 
 </div> <!-- Persistent Volume YAML Example -->
@@ -3792,11 +3788,11 @@ Where does this storage come from, and who makes it available to the cluster?
 
 <div id="Local-vs-Remote-Volume-Types">
 
-* Each Volume types has its own use cases!
+* Each Volume type has its use cases!
 * Local volume types violate <a href="#Storage-Requirements">2. and 3.</a> requirement for data persistence:
     * Being tied to 1 specific node
     * Surviving cluster crashes
-* For DB persistence use remote storage!
+* For DB persistence, use remote storage!
 
 </div> <!-- Local vs Remote Volume Types -->
 
@@ -3804,10 +3800,10 @@ Where does this storage come from, and who makes it available to the cluster?
 
 <div id="Who-creates-Persistence-Volumes">
 
-* Who creates the Persistent Volumes and when?
+* Who creates the Persistent Volumes, and when?
     * [X] K8s Administrator and K8s User
 * PV are resources that need to be there **BEFORE** the Pod that **depends on** it is created...
-* Storage resource is provisioned by Admin.
+* Admin provisions storage resources.
 * Creates the PV components from these storage backends.
 
 </div> <!-- Who creates Persistence Volumes? -->
@@ -3817,7 +3813,7 @@ Where does this storage come from, and who makes it available to the cluster?
 
 <div id="Persistent-Volume-Claim">
 
-* Application has to **claim** the Persistent Volume...
+* Application has to **claim** the Persistent Volume
 * We use that PVC in Pods configurations
 
 * PVC
@@ -3862,7 +3858,7 @@ Where does this storage come from, and who makes it available to the cluster?
 <div id="Levels-of-Volume-abstractions">
 
 1) Pod requests the volume through the PV claim
-2) Claim tries to find a volume in cluster
+2) Claim tries to find a volume in the cluster
 3) Volume has the actual storage backend
 
 * **NOTE:** Claims must be in the same namespace!
@@ -3919,11 +3915,11 @@ Then:
 
 <div id="Storage-Class">
 
-1) Admins confogure storage
+1) Admins configure storage
 2) Create PV
 3) K8s user claim PV using PVC
 
-* 3rd K8s Component, which makes process more efficient
+* 3rd K8s Component, which makes the process more efficient
 * SC provisions PV **dynamically**, when PVC claims it...
   ```yaml
   apiVersion: storage.k8s.io/v1
@@ -3981,17 +3977,17 @@ Where is the data persisted?
     * Data is persisted on the K8s Node
 
 * You should use remote storage, especially in production!
-* Remote storage systems **persistet data independent of the K8s Node**, where the data orginated.
+* Remote storage systems **persist data independent of the K8s Node**, where the data originated.
 
 ---
 
 * `hostPath` Volume
     * [X] Simple configuration
-    * [ ] But use only for **single node testing**. for multi-node cluster: use `local` volume type instead.
-    * [ ] Also `hostPath` volumes contain many security risks and it's best practice to avoid the use of `hostPaths`
+    * [ ] But use only for **single node testing**. For multi-node clusters: use the `local` volume type instead.
+    * [ ] Also, `hostPath` volumes contain many security risks, and it's best practice to avoid the use of `hostPaths`
       when
       possible
-* **NOTE:** This is one of the volume types that tested in CKA Exam!
+* **NOTE:** This is one of the volume types tested in the CKA Exam!
 
 ---
 
@@ -4000,7 +3996,7 @@ Lecture Overview
 1) Create PV
     * Data is stored on the local machine
 2) Create PVC
-3) Create Deployment to use Volume
+3) Create a Deployment to use Volume
 
 ### Create PersistentVolume
 
@@ -4026,9 +4022,9 @@ spec:
     * ReadOnlyMany
     * ReadWriteOncePod
     * [Docs](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes)
-    * **NOTE**: Different resource providers, support specific modes
+    * **NOTE**: Different resource providers support specific modes
 
-apply this file and check the PV:
+Apply this file and check the PV:
 
 ```shell
 kubectl get pv
@@ -4038,8 +4034,8 @@ kubectl get pv
 * A volume will be in one of the following phases:
     * `Available`: A free resource that is not yet bound to a claim
     * `Bound`: The volume is bound to a claim
-    * `Released`: The claim has been deleted, but the resource is not yet reclaimed by the cluster
-    * `Faild`: The volume has faild its automatic reclamation
+    * `Released`: The claim has been deleted, but the cluster does not yet reclaim the resource
+    * `Failed`: The volume has failed its automatic reclamation
 
 </div> <!-- Create PersistentVolume -->
 
@@ -4060,10 +4056,10 @@ spec:
     - ReadWriteOnce
 ```
 
-* In PVC we define how much storage, access mode etc. we need
+* In PVC, we define how much storage, access mode, etc., we need
 * K8s Control Plane looks for a PV that satisfies the claims requirements
-* When a suitable PV is found, it binds the claim to the volume, otherwide it will stay unbound.
-* **NOTE**: Different voluimes may be available in the cluster
+* When a suitable PV is found, it binds the claim to the volume. Otherwise, it will stay unbound.
+* **NOTE**: Different volumes may be available in the cluster
 
 </div> <!-- Create PersistentVolumeClaim -->
 
@@ -4103,8 +4099,8 @@ spec:
             claimName: mysql-data-pvc
 ```
 
-* Check inside the containers, the node path etc.
-* [ ] **NOTE**: When Pod gets scheduled to anotherWorker Node, the data won't bve available!
+* Check inside the containers, the node path, etc.
+* [ ] **NOTE**: When Pod gets scheduled to another worker Node, the data won't be available!
 
 ---
 
@@ -4120,7 +4116,7 @@ spec:
 <div id="emptyDir-Volume">
 
 * Logging Use Case
-    * Can't access each others file system
+    * Can't access each other's file system
     * Doesn't need to be persisted
 * Caching Use Case
     * Storage can be shared
@@ -4131,10 +4127,10 @@ spec:
 emptyDir Volume
 
 * Suitable for multi-container Pods
-* All containers in the Pod can read and write the same files in the emptyDir volume
+* All containers in the Pod can read and write the same files in the emptyDir Volume
 * EmptyDir volume is **initially empty**
 * Is first created when a Pod is assigned to a Node and exists as long as that Pod is running on the Node
-* When Pod is removed from a Node, the data is deleted permanently
+* When Pod is removed from a Node, the Data is deleted permanently
 * **Data inside the emptyDir is mounted into the containers file system**
 
 ### Configure emptyDir Volume
