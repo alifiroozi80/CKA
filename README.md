@@ -41,7 +41,7 @@ Have Fun!
 - [x] Add exam tips
 - [x] Add `Helm` - Package Manager of Kubernetes
 - [x] Add `Operators`
-- [ ] Add monitoring - `Prometheus`
+- [x] Add monitoring - `Prometheus`
 - [ ] Add `Microservices`
 - [ ] Kubernetes on AWS - `EKS`
 
