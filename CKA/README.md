@@ -126,7 +126,7 @@
       </ul>
   </li>
     <li>
-      Make application accessible from outside the cluster
+      Make the application accessible from outside the cluster
       <ul>
         <li><a href="#NodePort-Service-Type">NodePort Service Type</a>
           <ul>
@@ -1854,7 +1854,7 @@ metadata:
     app: nginx
     svc: nginx-test
 spec:
-  type: NodePort # ClusterIP is default, thats why we didnt need to specify the type before
+  type: NodePort # ClusterIP is the default, that's why we didn't need to specify the type before
   selector:
     app: nginx
   ports:
@@ -1871,7 +1871,7 @@ spec:
 * Internal Service accessible on `Service IP address + Port`
 * NodePort also creates ClusterIP internal Service
 * NodePort, `Opens Port on each Worker Node`
-* External traffic has access to `fixed port` on each Worker Node!
+* External traffic has access to a `fixed port` on each Worker Node!
 * Range: `30000-32676`
 * Sometimes, it's the only available option for external traffic (e.g. most clusters deployed with `kubeadm`
   or `on-premises`)
@@ -1895,7 +1895,7 @@ NodePort Service Accessibility:
 
 <div id="Why-Loadbalancer">
 
-At this point, our application is accessible from outside, but it has a couple of downgrades:
+At this point, our application is accessible from the outside, but it has a couple of downgrades:
 
 1) Not user friendly
 2) Insecure & messy!
@@ -1912,7 +1912,7 @@ metadata:
     app: nginx
     svc: nginx-test
 spec:
-  type: LoadBalancer # The configuration of Loadbalancer is exactly like NodePort except this part...
+  type: LoadBalancer # The configuration of Loadbalancer is exactly like NodePort except for this part...
   selector:
     app: nginx
   ports:
@@ -1960,19 +1960,19 @@ Some notes:
 * Cloud native loadbalancer will be provisioned for your Service
 * Here we are going to create a loadbalancer from scratch on AWS
 
-1) From `EC2 managment console` go to `Load Balancing/Load Balancers`
+1) From `EC2 management console` go to `Load Balancing/Load Balancers`
 2) Choose `Application Load Balancer`
-3) Give it some name (Doesn't actually matter!)
-4) In `Availibility Zones` section, we should select a zone that our `Worker Nodes` are
+3) Give it some name (Doesn't matter!)
+4) In the `Availibility Zones` section, we should select a zone that our `Worker Nodes` are
 5) Then you must select `at least 2 subnets` (Very specific to AWS)
-6) In `Configure Routing` (This the part that we decide where does Loadbalancer forward the requests that it gets):
+6) In `Configure Routing` (This the part where we decide where does Loadbalancer forward the requests that it gets):
 
 * Select a name
-* In port section, we give it `The nodePort from Service configuration` (In our case 30000)
+* In the port section, we give it `The nodePort from Service configuration` (In our case 30000)
 
 7) In `Register Targets`, we should specify `Which instances` this are exactly, In our case these are
    the `Worker Nodes` (`Only` the Worker Nodes NOT master) and then Register
-8) After a while your Loadbalancer will go from `Provisioning` to `Active` state
+8) After a while your Loadbalancer will go from `Provisioning` to an `Active` state
 
 <img src="images/loadbalancer-2.png" alt="Load Balancer Pic-2">
 
@@ -1988,7 +1988,7 @@ Some notes:
 
 <div id="Access-Application-Loadbalancer">
 
-Now, How de we access the Loadbalancer?
+Now, How do we access the Loadbalancer?
 
 * A Loadbalancer has an `IP address` but it also has a `Domain Name`
 
@@ -2009,13 +2009,13 @@ Now if you paste the Loadbalancer Domain Name, you should still see the Welcome 
 * **Loadbalancer Disadvantages**:
 
 1) Loadbalancer that all become entrypoints
-2) Configure Domain Name
+2) Configure the Domain Name
 3) Each Loadbalancer exposes new NodePort
-4) Each Loadbalancer increases cloud bill
+4) Each Loadbalancer increases the cloud bill
 5) `Configure` everything `outside the cluster`
 6) Isn't it good:
 
-* Having this as part of K8s cluster?
+* Having this as part of the K8s cluster?
 * Configure secure connection
 * Loadbalancing to different services
 
@@ -2055,7 +2055,7 @@ Now if you paste the Loadbalancer Domain Name, you should still see the Welcome 
 
 #### What is `Ingress Controller?`
 
-* Evaluates and processes Ingress rules
+* Evaluates and process Ingress rules
 * Manages redirection
 * Entrypoint to cluster
 * Many third-party implementations (Default: `K8s Nginx Ingress Controller`)
@@ -2071,11 +2071,11 @@ Now if you paste the Loadbalancer Domain Name, you should still see the Welcome 
 
 2) Bare Metal:
     * You need to configure some kind of entrypoint
-    * Either inside of cluster or outside as separate server (Software or Hardware solution)
+    * Either inside of the cluster or outside as a separate server (Software or Hardware solution)
     * Separate server
     * Public IP address and open ports
     * Entrypoint to cluster
-    * `No server in K8s cluster is accessible from outside!`
+    * `No server in the K8s cluster is accessible from outside!`
 
 <img src="images/ingress-4.png" alt="Ingress Pic-4">
 
@@ -2138,9 +2138,9 @@ Now you may wonder why a Loadbalancer Service type?
 
 Now we should Configure a LB again... <a href="#Create-Loadbalancer">Check this section</a>
 
-At this point if you check the LB IP address, you should get a Nginx Error (`504 Gateway Time-out` OR `404 Not Found`).
+At this point, if you check the LB IP address, you should get an Nginx Error (`504 Gateway Time-out` OR `404 Not Found`).
 It is because we didn't configure it yet...
-So as a next step: Configure Ingress Controller to route the traffic
+So as a next step: Configure the Ingress Controller to route the traffic
 
 </div> <!-- Deploy Ingress Controller -->
 
