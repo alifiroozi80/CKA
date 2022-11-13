@@ -223,7 +223,7 @@ We are going to cover:
 
 * By default, a CRD is "free form" (we can put pretty much anything we want in it)
 * When creating a CRD, we should provide an
-  O`penAPI v3 schema` ([Example](https://github.com/amaizfinance/redis-operator/blob/master/deploy/crds/k8s_v1alpha1_redis_crd.yaml#L34))
+  `OpenAPI v3 schema` ([Example](https://github.com/amaizfinance/redis-operator/blob/master/deploy/crds/k8s_v1alpha1_redis_crd.yaml#L34))
 * The API server will then validate resources created/edited with this schema
 * If we need a stronger validation, we can use a Validating Admission Webhook:
     * Run
