@@ -128,39 +128,46 @@
     <li>
       Make the application accessible from outside the cluster
       <ul>
-        <li><a href="#NodePort-Service-Type">NodePort Service Type</a>
+        <li><a href="#NodePort-Service-Type">NodePort Service Type</a></li>
           <ul>
-            <li><a href="#What-is-NodePort-How-does-it-work">What is NodePort? How does it work?</a>
+            <li><a href="#What-is-NodePort-How-does-it-work">What is NodePort? How does it work?</a></li>
           </ul>
         </li>
         <li>
             Loadbalancer Service Type
           <ul>
-            <li><a href="#Why-Loadbalancer">Why Loadbalancer?</a>
-            <li><a href="#How-Loadbalancer-works">How Loadbalancer works?</a>
-            <li><a href="#Create-Loadbalancer">Create Loadbalancer</a>
-            <li><a href="#Access-Application-Loadbalancer">Access Application</a>
+            <li><a href="#Why-Loadbalancer">Why Loadbalancer?</a></li>
+            <li><a href="#How-Loadbalancer-works">How Loadbalancer works?</a></li>
+            <li><a href="#Create-Loadbalancer">Create Loadbalancer</a></li>
+            <li><a href="#Access-Application-Loadbalancer">Access Application</a></li>
           </ul>
         </li>
         <li>
             External Access with Ingress
           <ul>
-            <li><a href="#Why-Ingress">Why Ingress?</a>
-            <li><a href="#How-Ingress-works">How Ingress works?</a>
-            <li><a href="#How-to-configure-Ingress">How to configure Ingress?</a>
-            <li><a href="#Ingress-More-Use-Cases">More Use Cases</a>
-            <li><a href="#Configuring-TLS-Certificate">Configuring TLS Certificate</a>
+            <li><a href="#Why-Ingress">Why Ingress?</a></li>
+            <li><a href="#How-Ingress-works">How Ingress works?</a></li>
+            <li><a href="#How-to-configure-Ingress">How to configure Ingress?</a></li>
+            <li><a href="#Ingress-More-Use-Cases">More Use Cases</a></li>
+            <li><a href="#Configuring-TLS-Certificate">Configuring TLS Certificate</a></li>
           </ul>
         </li>
         <li>
             Setup Ingress
           <ul>
-            <li><a href="#Deploy-Ingress-Controller">Deploy Ingress Controller</a>
-            <li><a href="#Configure-Routing-with-Ingress">Configure Routing with Ingress</a>
-            <li><a href="#Create-Apply-Ingress-Config-File">Create & Apply Ingress Config File</a>
-            <li><a href="#Configure-Multiple-Paths">Configure Multiple Paths</a>
-            <li><a href="#Some-Notes-on-ingress-controller">Some Notes</a>
+            <li><a href="#Deploy-Ingress-Controller">Deploy Ingress Controller</a></li>
+            <li><a href="#Configure-Routing-with-Ingress">Configure Routing with Ingress</a></li>
+            <li><a href="#Create-Apply-Ingress-Config-File">Create & Apply Ingress Config File</a></li>
+            <li><a href="#Configure-Multiple-Paths">Configure Multiple Paths</a></li>
+            <li><a href="#Some-Notes-on-ingress-controller">Some Notes</a></li>
           </ul>
+        </li>
+        <li>
+          SSL & Ingress
+            <li><a href="#SSL-and-Ingress-Intro">Intro</a></li>
+            <li><a href="#SSL-and-Ingress-Deploy-Cert-Manger">Deploy Cert-Manger</a></li>
+            <li><a href="#SSL-and-Ingress-Configure-a-Lets-Encrypt-Issuer">Configure a Let's Encrypt Issuer</a></li>
+            <li><a href="#SSL-and-Ingress-Create-a-SSL-on-a-Ingress-Resource">Create a SSL on a Ingress Resource</a></li>
         </li>
       </ul>
   </li>
@@ -1304,10 +1311,12 @@ achieve these goals... the solution is `implenting a CNI Plugin`... In this scen
 
 * Master
   ```shell
-  wget "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')" -O weave.yaml
+  kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
   ```
 
 - [X] You can change the default IP range:
+
+For taht, first download the YAML file, open it and change the IP range. the apply the file.
 
 * Master
   ```shell
@@ -2116,6 +2125,13 @@ Now if you paste the Loadbalancer Domain Name, you should still see the Welcome 
 
 We deploy our Ingress Controller via Helm charts...
 
+What is Helm?
+
+* Helm is a package manager for Kubernetes.
+* I have a complete [Helm tutorial](https://github.com/alifiroozi80/CKA/tree/main/Helm) as well.
+* But you can only know some about Helm to complete this repo.
+* So, don't worry if you are not familiar with Helm.
+
 * [Official documentation](https://github.com/kubernetes/ingress-nginx/tree/main/charts/ingress-nginx)
 
 ```shell
@@ -2334,6 +2350,360 @@ If you check the pods, you can see that we have only 1 `ingress nginx controller
 In Production, you should have 1 replica per Worker Node
 
 </div> <!-- Some Notes -->
+
+## SSL & Ingress
+
+### Intro
+<div id="SSL-and-Ingress-Intro">
+
+Until now, we already know many things about K8s Networking, especially the Ingress. 
+We know that Ingress is awesome and blah blah, but wouldn't it be fantastic if we had an SSL certificate with our Ingress? Or, even better: automatically create and assign the SSL certificates to our Ingress resources.
+
+[Cert-Manager](https://github.com/cert-manager/cert-manager) is an Open Source project that Automatically provision and manage TLS certificates in Kubernetes.
+
+In this section, we will learn about it.
+
+**NOTE:** This section is not in the CKA exam. So you can skip it.
+
+</div> <!-- Intro -->
+
+### Deploy Cert-Manger
+<div id="SSL-and-Ingress-Deploy-Cert-Manger">
+
+We need to install cert-manager to do the work with Kubernetes to request a certificate and respond to the challenge to validate it. We can use Helm or plain Kubernetes manifests to install cert-manager.
+
+We will use Helm to install it. I have a [Helm tutorial](https://github.com/alifiroozi80/CKA/tree/main/Helm), be sure to check it too.
+
+---
+
+Now let's talk a little more about cert-manager.
+
+Cert-manager mainly uses two different custom Kubernetes resources - known as CRDs - to configure and control how it operates and store state. These resources are Issuers and Certificates. (I have a [tutorial](https://github.com/alifiroozi80/CKA/tree/main/Operators) about K8s CRDs and Operators. Check that as well)
+
+That's enough to start using cert-manager but to understand the certificate concept, check the [official documentation](https://cert-manager.io/docs/concepts/certificate).
+
+---
+
+* Let's install the cert-manager Helm chart with this one-liner:
+   ```shell
+   helm install cert-manager cert-manager \
+    --repo https://charts.jetstack.io \
+    --create-namespace --namespace cert-manager \
+    --set installCRDs=true
+   ```
+* If you prefer to install with a single YAML file, that's fine too! (see the [documentation](https://cert-manager.io/docs/installation/) for instructions)
+   ```shell
+   kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.10.1/cert-manager.yaml
+   ```
+
+</div> <!-- Deploy Cert-Manger -->
+
+### Configure a Let's Encrypt Issuer
+<div id="SSL-and-Ingress-Configure-a-Lets-Encrypt-Issuer">
+
+We'll set up two issuers for Let's Encrypt in this example: `staging` and `production`.
+
+The Let's Encrypt `production` issuer has [very strict rate limits](https://letsencrypt.org/docs/rate-limits). When you're experimenting and learning, it can be very easy to hit those limits. Because of that risk, we'll start with the Let's Encrypt `staging` issuer, and once we're happy that it's working we'll switch to the `production` issuer.
+
+**Note:** You'll see a warning about untrusted certificates from the `staging` issuer, but that's totally expected.
+
+Create this definition locally and update the email address to your own. This email is required by Let's Encrypt and used to notify you of certificate expiration and updates.
+
+---
+
+Before moving forward, let's check the [Official Docs](https://cert-manager.io/docs/tutorials/acme/nginx-ingress/#issuers) about `Issuer` and `ClusterIssuer`:
+
+An Issuer defines how cert-manager will request TLS certificates. **Issuers are specific to a single namespace** in Kubernetes, but there's also a which is meant to be a **cluster-wide** version.
+
+Take care to ensure that your Issuers are created in the same namespace as the certificates you want to create. You might need to add `-n my-namespace` to your `kubectl create` commands.
+
+Your other option is to replace your `Issuers` with `ClusterIssuers`; ClusterIssuer resources apply across all Ingress resources in your cluster. If using a `ClusterIssuer`, remember to update the Ingress annotation `cert-manager.io/issuer` to `cert-manager.io/cluster-issuer`. (More on that later!)
+
+---
+
+We will install the `ClusterIssuer`.
+
+**STAGING**
+
+```yaml
+apiVersion: cert-manager.io/v1
+   kind: ClusterIssuer
+   metadata:
+     name: letsencrypt-staging
+   spec:
+     acme:
+       # The ACME server URL
+       server: https://acme-staging-v02.api.letsencrypt.org/directory
+       # Email address used for ACME registration
+       # This email is required by Let's Encrypt and used to notify you of certificate expiration and updates
+       email: user@example.com
+       # Name of a secret used to store the ACME account private key
+       privateKeySecretRef:
+         name: letsencrypt-staging
+       # Enable the HTTP-01 challenge provider
+       solvers:
+       - http01:
+           ingress:
+             # Change it to your Ingress Controller if its not Nginx. e.g. traefik
+             class: nginx
+```
+
+**PRODUCTION**
+
+```yaml
+apiVersion: cert-manager.io/v1
+   kind: ClusterIssuer
+   metadata:
+     name: letsencrypt-prod
+   spec:
+     acme:
+       # The ACME server URL
+       server: https://acme-v02.api.letsencrypt.org/directory
+       # Email address used for ACME registration
+       email: user@example.com
+       # Name of a secret used to store the ACME account private key
+       privateKeySecretRef:
+         name: letsencrypt-prod
+       # Enable the HTTP-01 challenge provider
+       solvers:
+       - http01:
+           ingress:
+             class: nginx
+```
+
+* **NOTE:** Both of these issuers are configured to use the `HTTP01` challenge provider (See the [docs](https://cert-manager.io/docs/configuration/acme/http01)).
+
+Apply both files.
+
+Now, if you get these `clusterissuers`:
+
+```shell
+kubectl get clusterissuer
+```
+
+they are not `ready` yet. We have to wait a couple of minutes for those to become ready.
+
+Meanwhile, let's describe them:
+
+```shell
+kubectl describe issuer letsencrypt-staging
+```
+```shell
+Name:         letsencrypt-staging
+Namespace:    default
+Labels:       <none>
+Annotations:  kubectl.kubernetes.io/last-applied-configuration={"apiVersion":"cert-manager.io/v1","kind":"Issuer","metadata":{"annotations":{},"name":"letsencrypt-staging","namespace":"default"},(...)}
+API Version:  cert-manager.io/v1
+Kind:         Issuer
+Metadata:
+  Cluster Name:
+  Creation Timestamp:  2022-11-17T18:03:54Z
+  Generation:          0
+  Resource Version:    9092
+  Self Link:           /apis/cert-manager.io/v1/namespaces/default/issuers/letsencrypt-staging
+  UID:                 25b7ae77-ea93-11e8-82f8-42010a8a00b5
+Spec:
+  Acme:
+    Email:  email@example.com
+    Private Key Secret Ref:
+      Key:
+      Name:  letsencrypt-staging
+    Server:  https://acme-staging-v02.api.letsencrypt.org/directory
+    Solvers:
+      Http 01:
+        Ingress:
+          Class: nginx
+Status:
+  Acme:
+    Uri:  https://acme-staging-v02.api.letsencrypt.org/acme/acct/7374163
+  Conditions:
+    Last Transition Time:  2022-11-17T18:04:00Z
+    Message:               The ACME account was registered with the ACME server
+    Reason:                ACMEAccountRegistered
+    Status:                True
+    Type:                  Ready
+Events:                    <none>
+```
+
+After a couple of minutes, if you get it, it should be in the `ready` state.
+
+```shell
+$ kubectl get clusterissuer -o wide
+NAME                  READY   STATUS                                                 AGE
+letsencrypt-prod      True    The ACME account was registered with the ACME server   1d
+letsencrypt-staging   True    The ACME account was registered with the ACME server   1d
+```
+
+</div> <!-- Configure a Let's Encrypt Issuer -->
+
+### Create a SSL on a Ingress Resource
+<div id="SSL-and-Ingress-Create-a-SSL-on-a-Ingress-Resource">
+
+Alright, let's create a simple Nginx sample app.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ labels:
+  app: nginx
+ name: nginx
+ namespace: default
+spec:
+ replicas: 2
+ selector:
+  matchLabels:
+   app: nginx
+ template:
+  metadata:
+   labels:
+    app: nginx
+  spec:
+   containers:
+   - image: nginx
+     name: nginx
+     ports:
+     - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: nginx-service
+ namespace: default
+spec:
+ type: ClusterIP
+ selector:
+  app: nginx
+ ports:
+  - protocol: TCP
+   port: 8080
+   targetPort: 80
+```
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+ annotations:
+  nginx.ingress.kubernetes.io/rewrite-target: /
+ name: my-ingress
+ namespace: default
+spec:
+ ingressClassName: nginx
+ rules:
+  - host: Your Registered Domain or Domain of the Loadbalancer
+   http:
+    paths:
+     - pathType: Exact
+      backend:
+       service:
+        name: nginx-service
+        port:
+         number: 8080
+      path: /
+```
+
+If you apply this, you will see the Nginx welcome page, as we already saw.
+
+We want to create and assign an SSL certificate for this Nginx app with Let's Encrypt Issuers that we have already deployed in our cluster **Automatically**.
+
+For this, we can add an `annotation` to our Ingress resource file and a `tls` section, as we learned in the Ingress section.
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    # Cert-Manager Annotation
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+  name: my-ingress
+  namespace: default
+spec:
+  ingressClassName: nginx
+  # The TLS Section
+  tls:
+  - secretName: A Name
+    hosts:
+    - Your Registered Domain or Domain of the Loadbalancer
+  rules:
+    - host: Your Registered Domain or Domain of the Loadbalancer
+      http:
+        paths:
+          - pathType: Exact
+            backend:
+              service:
+                name: nginx-service
+                port:
+                  number: 8080
+            path: /
+```
+
+Note: The secret that is used in the ingress should match the secret defined in the certificate. There isn't any explicit checking, so a typo will result in the ingress-nginx-controller falling back to its self-signed certificate. In our example, we are using annotations on the ingress (and ingress-shim) which will **create the correct secrets on your behalf**.
+
+Apply the file again.
+
+Now, if we check for a certificate in the cluster, we will see a certificate has been created automatically!
+
+```shell
+$ kubectl get certificate
+NAME   READY    SECRET          AGE
+Name   False    Secret-Name     1d
+```
+
+It's not ready yet.
+
+After a couple of minutes, it will become ready!
+
+```shell
+$ kubectl get certificate -o wide
+NAME   READY   SECRET        ISSUER                STATUS                                          AGE
+Name   True    Secret-Name   letsencrypt-staging   Certificate is up to date and has not expired   1d
+```
+
+If you check the `secret`s in your namespace, you'll see the `secret` has been created for us automatically!
+
+Also, you can describe the certificate and see a lot of information about it.
+
+---
+
+Now that we have confidence that everything is configured correctly, you can update the annotations in the ingress to specify the `production` issuer:
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: my-ingress
+  namespace: default
+spec:
+  ingressClassName: nginx
+  tls:
+  - secretName: A Name
+    hosts:
+    - Your Registered Domain or Domain of the Loadbalancer
+  rules:
+    - host: Your Registered Domain or Domain of the Loadbalancer
+      http:
+        paths:
+          - pathType: Exact
+            backend:
+              service:
+                name: nginx-service
+                port:
+                  number: 8080
+            path: /
+```
+
+Apply the file.
+
+Now you can see the Nginx welcome page with SSL certs without any restrictions.
+
+Congrats!
+
+</div> <!-- Create a SSL on a Ingress Resource -->
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
