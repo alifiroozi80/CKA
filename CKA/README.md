@@ -164,10 +164,12 @@
         </li>
         <li>
           SSL & Ingress
+          <ul>
             <li><a href="#SSL-and-Ingress-Intro">Intro</a></li>
             <li><a href="#SSL-and-Ingress-Deploy-Cert-Manger">Deploy Cert-Manger</a></li>
             <li><a href="#SSL-and-Ingress-Configure-a-Lets-Encrypt-Issuer">Configure a Let's Encrypt Issuer</a></li>
             <li><a href="#SSL-and-Ingress-Create-a-SSL-on-a-Ingress-Resource">Create a SSL on a Ingress Resource</a></li>
+          </ul>
         </li>
       </ul>
   </li>
