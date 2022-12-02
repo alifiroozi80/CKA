@@ -143,6 +143,14 @@
           </ul>
         </li>
         <li>
+            HAProxy as LoadBalancer
+          <ul>
+            <li><a href="#HAProxy-as-LoadBalancer-What-is-HAProxy">What is HAProxy and why should we use that?</a></li>
+            <li><a href="#HAProxy-as-LoadBalancer-Setup-HAProxy">Setup HAProxy</a></li>
+            <li><a href="#HAProxy-as-LoadBalancer-Configure-HAProxy">Configure HAProxy</a></li>
+          </ul>
+        </li>
+        <li>
             External Access with Ingress
           <ul>
             <li><a href="#Why-Ingress">Why Ingress?</a></li>
@@ -2005,8 +2013,250 @@ Now, How do we access the Loadbalancer?
 
 Now if you paste the Loadbalancer Domain Name, you should still see the Welcome to Nginx!
 
-</div> <!-- Access Application-->
-</div> <!-- Loadbalancer Service Type-->
+</div> <!-- Access Application -->
+</div> <!-- Loadbalancer Service Type -->
+
+## HAProxy as LoadBalancer
+
+**NOTE:** This section is not in the CKA exam. So you can skip it.
+
+### What is HAProxy and why should we use that?
+<div id="HAProxy-as-LoadBalancer-What-is-HAProxy">
+
+What is HAProxy?
+
+According to the [docs](http://www.haproxy.org): HAProxy is a free, very fast, and reliable reverse-proxy offering **high availability**, **load balancing**, and **proxying** for **TCP** and **HTTP-based** applications. It is particularly suited for high-traffic websites and powers most of the world's most visited ones. Over the years, it has become the de-facto standard [open-source](https://github.com/haproxy/haproxy) load balancer, is now shipped with most mainstream Linux distributions, and is often deployed by default in cloud platforms.
+
+---
+
+The docs are very clear. The HAProxy is a Powerful Open-Source LoadBalancer. 
+
+Previously we learned how to create a load balancer on a cloud provider (AWS) and use it in our Cluster (`LoadBalancer` service type).
+
+Here we are going to do the same things, except instead of a cloud provider, we will create our very own LoadBalancer with the help of HAProxy.
+
+---
+
+So anyway, How should we decide between HAProxy and clouds LB?
+
+Good question!
+
+Here are some benefits:
+
+* Protocols
+  HAProxy provides load balancing at the **network** and **application** layers. This means you can set up backend clusters for an entire website or specify different backends based on the content of client requests.
+  In contrast, on-edge load balancers only manage the distribution of **application** layer (OSI layer 7) traffic.
+* Costs
+  HAProxy is a free and open-source application.
+  A cloud-provided load balancer requires a monthly or yearly subscription fee.
+* Performance
+  As shown in [this test run on AWS ARM-based Graviton2](https://www.haproxy.com/blog/haproxy-forwards-over-2-million-http-requests-per-second-on-a-single-aws-arm-instance), HAProxy scales very well with threads and can reach 2 million requests/s over SSL and 100 Gbps for forwarded traffic.
+* Reliability
+  HAProxy is first known for being extremely robust.
+* Security
+* And a lots more!
+
+---
+
+* In most cases, I use HAProxy instead of a Cloud LB.
+* But really, it depends on your situation.
+* Sometimes you want to go with a cloud LB, and other times, you want to go with HAProxy (based on the situation you are facing it).
+* Fortunately, you know both methods!
+
+</div> <!-- What is HAProxy and why should we use that? -->
+
+### Setup HAProxy
+<div id="HAProxy-as-LoadBalancer-Setup-HAProxy">
+
+* Alright, enough talking!
+* Let's set up the famous HAProxy for our cluster.
+* For that, we need another EC2 instance.
+* Create an EC2 instance. remember that this EC2 instance must have the same subnet as the Worker EC2 instances because it should see the instances it wants to send the traffic/requests to.
+* Also, remember that this instance should have a Public IP address (Obviously)
+* **Until now, our cluster has been in a Public mode (Every instance has public IP) for learning purposes.**
+**So you won't have any problem going along with this section.**
+**But, if your cluster is in private mode (None of the instances has a public IP address, they all have private IP addresses), you'll need to know about the bastion host.**
+**So, in your case, your instance must have 1) A Public IP address and 2) A Private IP address in the same range as your cluster.**
+**Because this instance must see the workers through its private hand and should be accessible to the outside world through its Public hand.**
+
+
+---
+
+For installing it, we have two choices:
+
+1) Easy approach (Not recommended):
+
+```shell
+sudo apt install haproxy
+```
+
+Yes, that simple command will quickly and easily set you up with HAProxy. Still, you’ll find that the version you’ve just installed probably lags behind the current release by a minor version number or two, sometimes as much as a major version number.
+The version you get with apt out-of-the-box will be stable and secure, but it will lack some cool new features.
+
+2) Install the latest HAProxy using a PPA (recommended)
+
+Head over to [haproxy.debian.net](https://haproxy.debian.net), where you can select the install instructions for your OS
+
+```shell
+sudo apt install --no-install-recommends software-properties-common
+sudo add-apt-repository ppa:vbernat/haproxy-2.6
+sudo apt install haproxy=2.6.\*
+```
+
+Adding `=2.6.\*` to the end tells `apt` that we want to maintain the latest version of HAProxy in the `2.6` branch, so if there are future updates in that branch, you’ll get them when you do an `apt upgrade`.
+
+If you execute the `haproxy -v` command, you'll see your installed HAProxy version.
+
+</div> <!-- Setup HAProxy -->
+
+### Configure HAProxy
+<div id="HAProxy-as-LoadBalancer-Configure-HAProxy">
+
+Now that we have installed the HAProxy, it's time to configure it to load balance the traffic to our cluster.
+
+But first, let's deploy a simple Nginx application and a NodePort service type.
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ labels:
+  app: nginx
+ name: nginx
+ namespace: default
+spec:
+ replicas: 2
+ selector:
+  matchLabels:
+   app: nginx
+ template:
+  metadata:
+   labels:
+    app: nginx
+  spec:
+   containers:
+   - image: nginx
+    name: nginx
+    ports:
+    - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: nginx-service
+ namespace: default
+spec:
+ type: NodePort
+ selector:
+  app: nginx
+ ports:
+  - protocol: TCP
+   port: 8080
+   targetPort: 80
+   nodePort: 30000
+```
+
+If you apply it, it will create Nginx deployment and open port `30000` on each Node, and I can access the Nginx welcome page by heading to `any NodeIP:30000`.
+
+---
+
+The HAProxy config file is in the `/etc/haproxy/haproxy.cfg` location.
+
+If you open it, you'll see some configuration in it:
+
+```cfg
+global
+	log /dev/log	local0
+	log /dev/log	local1 notice
+	chroot /var/lib/haproxy
+	stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+	stats timeout 30s
+	user haproxy
+	group haproxy
+	daemon
+
+	# Default SSL material locations
+	ca-base /etc/ssl/certs
+	crt-base /etc/ssl/private
+
+	# See: https://ssl-config.mozilla.org/#server=haproxy&server-version=2.0.3&config=intermediate
+        ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
+        ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
+        ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
+
+defaults
+	log	global
+	mode	http
+	option	httplog
+	option	dontlognull
+        timeout connect 5000
+        timeout client  50000
+        timeout server  50000
+	errorfile 400 /etc/haproxy/errors/400.http
+	errorfile 403 /etc/haproxy/errors/403.http
+	errorfile 408 /etc/haproxy/errors/408.http
+	errorfile 500 /etc/haproxy/errors/500.http
+	errorfile 502 /etc/haproxy/errors/502.http
+	errorfile 503 /etc/haproxy/errors/503.http
+	errorfile 504 /etc/haproxy/errors/504.http
+```
+
+We are going to modify this configuration file.
+
+---
+
+Append these lines to end of the configuration:
+
+```cfg
+frontend http
+  bind *:80
+  mode tcp
+  redirect scheme https code 301 if !{ ssl_fc }
+  default_backend http
+
+frontend https
+  bind *:443
+  mode tcp
+  default_backend https
+
+backend https
+  balance roundrobin
+  mode tcp
+  server worker1 172.16.0.114:30000 check
+  server worker2 172.16.0.154:30000 check
+
+backend http
+  balance roundrobin
+  mode tcp
+  server worker1 172.16.0.114:30000 check
+  server worker2 172.16.0.154:30000 check
+
+
+frontend stats
+  option http-use-htx
+  stats enable
+  stats uri /stats
+  stats refresh 10s
+```
+
+* **NOTE:** Remember to replace your worker's IPs with mine!
+* **NOTE:** This is the very basics of HAProxy configuration. For advanced use cases and configurations, you'll need an expert in the HAProxy world, but for now, this will work for us.
+
+Then restart the HAProxy service:
+
+```shell
+sudo systemctl restart haproxy
+```
+
+Now, if you go to the browser and head over to `HAProxy-Instance-IP`, you'll see the Nginx welcome page!
+
+Later on that we will learn about Ingress and SSL, you'll even see this page with SSL (That's why in the configuration, we added `https` sections!)
+
+---
+
+We will learn more about HAProxy after we learn Ingress.
+
+</div> <!-- Configure HAProxy -->
 
 ## External Access with Ingress
 
