@@ -32,7 +32,7 @@
       </ul>
   </li>
   <li>
-      Manage K8s Compoenents - kubectl & Config File
+      Manage K8s Components - kubectl & Config File
       <ul>
         <li><a href="#kubectl-Config-File-Kubernetes-CLI">Kubernetes CLI</a></li>
         <li><a href="#kubectl-Config-File-K8s-Configuration-file">K8s Configuration file</a></li>
