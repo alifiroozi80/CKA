@@ -915,14 +915,15 @@ This is how we prepare our bare-metal servers...
 * Kubectl
     * Command line tool to **talk to the cluster**
 
+**NOTE:** This installation guide is for Kubernetes `v1.30`. If you want to use a different Kubernetes version, please refer to the [documentation](https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm).
+
 * All
   ```sh
   sudo apt-get update
   sudo apt-get install -y apt-transport-https ca-certificates curl
-  sudo mkdir -p /etc/apt/keyrings
-  sudo chmod -R a=---,u=rw,go=r /etc/apt/keyrings
-  sudo curl -fsSLo /etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg https://dl.k8s.io/apt/doc/apt-key.gpg
-  echo "deb [signed-by=/etc/apt/trusted.gpg.d/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+  sudo mkdir -p -m 755 /etc/apt/keyrings
+  curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
   ```
 
 NOTE-1: Kubelet, Kubeadm and Kubectl MOST be ALL in SAME VERSION...
@@ -934,7 +935,8 @@ Use the `apt-cache madison kubeadm` to get started.
 * All
   ```sh
   sudo apt-get update
-  sudo apt-get install -y kubelet=<VERSION> kubeadm=<VERSION> kubectl=<VERSION>
+  # sudo apt-get install -y kubelet=<VERSION> kubeadm=<VERSION> kubectl=<VERSION>
+  sudo apt-get install -y kubelet kubeadm kubectl
   sudo apt-mark hold kubelet kubeadm kubectl
   ```
 
@@ -1020,6 +1022,10 @@ But the option number `3` is awesome and actually a bets practise...
   ```shell
   kubectl get nodes
   ```
+
+---
+
+P.S: If your Pods in the `kube-system` namespace keep restarting, and if you are using containerd, check whether the `SystemdCgroup` is configured to true in `/etc/containerd/config.toml`, which may help you resolve the issue.
 
 </div>
 
